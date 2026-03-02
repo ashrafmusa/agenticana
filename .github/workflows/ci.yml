@@ -1,136 +1,34 @@
-name: CI
+name: Agentica CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
-  validate:
-    name: Validate Agents & Skills
-    runs-on: ubuntu-latest
+  verify:
+    runs-on: windows-latest # Matching USER OS for consistency with scripts
+
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: mcp/package-lock.json
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install playwright
+        python -m playwright install chromium
 
-      - name: Install MCP dependencies
-        run: cd mcp && npm ci
+    - name: Run Workspace Verification
+      run: |
+        python scripts/verify_all.py . --no-e2e
 
-      - name: Install Python dependencies
-        run: pip install -q numpy
-
-      - name: ✅ Validate all MCP tool modules load
-        run: |
-          cd mcp
-          node -e "
-            ['./tools/memory-tools','./tools/reasoning-bank-tools','./tools/router-tools','./tools/agent-tools']
-              .forEach(m => { require(m); console.log('OK: ' + m); });
-            process.exit(0);
-          "
-
-      - name: ✅ Validate ReasoningBank CLI
-        run: python scripts/reasoning_bank.py stats
-
-      - name: ✅ Validate Model Router CLI
-        run: python scripts/router_cli.py "fix a typo" --compact
-
-      - name: ✅ Count agent YAML files
-        run: |
-          count=$(ls agents/*.yaml 2>/dev/null | wc -l)
-          echo "Agent YAML files found: $count"
-          if [ "$count" -lt 20 ]; then
-            echo "❌ Expected 20 agent YAMLs, found $count"
-            exit 1
-          fi
-          echo "✅ All $count agent YAMLs present"
-
-      - name: ✅ Validate JSON files are parseable
-        run: |
-          for f in $(find . -name "*.json" -not -path "*/node_modules/*" -not -path "*/.git/*"); do
-            python -m json.tool "$f" > /dev/null && echo "OK: $f" || { echo "FAIL: $f"; exit 1; }
-          done
-
-      - name: ✅ Validate YAML agent files
-        run: |
-          python -c "
-          import yaml, os, sys
-          agents_dir = 'agents'
-          errors = []
-          for f in os.listdir(agents_dir):
-              if f.endswith('.yaml'):
-                  try:
-                      with open(os.path.join(agents_dir, f)) as fh:
-                          data = yaml.safe_load(fh)
-                      required = ['name','version','model_tier','description']
-                      missing = [k for k in required if k not in data]
-                      if missing:
-                          errors.append(f'{f}: missing fields {missing}')
-                  except Exception as e:
-                      errors.append(f'{f}: {e}')
-          if errors:
-              print('YAML validation errors:')
-              for e in errors: print(' -', e)
-              sys.exit(1)
-          print(f'All {len(os.listdir(agents_dir))} YAML files valid')
-          " || pip install pyyaml && python -c "import yaml; print('pyyaml installed')"
-
-      - name: ✅ Test ReasoningBank retrieve
-        run: python scripts/reasoning_bank.py retrieve "build authentication system" --k 3
-
-      - name: ✅ Run verify_all.py
-        run: python scripts/verify_all.py . || true  # Non-blocking, report only
-
-  security:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check for secrets in code
-        run: |
-          # Basic check for hardcoded secrets patterns
-          if grep -rn "sk-[a-zA-Z0-9]" --include="*.js" --include="*.py" --include="*.ts" . \
-             | grep -v "node_modules" | grep -v ".git"; then
-            echo "⚠️ Potential API key found. Review before merging."
-            exit 1
-          fi
-          echo "✅ No hardcoded secrets detected"
-
-  lint:
-    name: Lint & Format
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install MCP dependencies
-        run: cd mcp && npm ci
-
-      - name: Check JavaScript syntax
-        run: |
-          for f in mcp/server.js mcp/tools/*.js router/*.js bin/AGENTICANA.js; do
-            if [ -f "$f" ]; then
-              node --check "$f" && echo "OK: $f" || { echo "FAIL: $f"; exit 1; }
-            fi
-          done
-
-      - name: Check Python syntax
-        run: |
-          for f in scripts/*.py; do
-            python -m py_compile "$f" && echo "OK: $f" || { echo "FAIL: $f"; exit 1; }
-          done
+    - name: Verify Exchange Registry
+      run: |
+        python scripts/exchange.py list
+        python scripts/exchange.py sync

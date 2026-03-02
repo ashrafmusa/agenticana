@@ -178,17 +178,49 @@ python scripts/router_cli.py "fix typo" --compact
 python scripts/router_cli.py --stats
 ```
 
-### Pattern Distillation
+### Agentica Exchange (📦 New)
+The Exchange allows you to pull new agents, skills, and patterns from a remote registry.
+
+![Agentica Exchange in Action](.Agentica/logs/visuals/cli_exchange_demo.png)
+
 ```powershell
-# Extract patterns from decisions (run weekly or after 5+ new decisions)
-python scripts/distill_patterns.py
+# Sync registry with remote manifest
+python scripts/exchange.py sync
 
-# Preview without saving
-python scripts/distill_patterns.py --dry-run
+# List installed components
+python scripts/exchange.py list
 
-# Require higher bar
-python scripts/distill_patterns.py --min-frequency 3 --min-success 0.8
+# Install a new component (agent or skill)
+python scripts/exchange.py install react-expert
+
+# Get details on an installed component
+python scripts/exchange.py info react-expert
 ```
+
+### Heartbeat Daemon (⚡ Autonomous)
+The background daemon ensures project health (Linting, Security, Soul Distillation).
+
+```powershell
+# Start the daemon
+python scripts/heartbeat_daemon.py
+
+# Run tasks once and exit
+python scripts/heartbeat_daemon.py --once
+```
+
+---
+
+## 6. Automation & CI/CD
+
+Agenticana includes a pre-configured **GitHub Actions CI** pipeline.
+
+- **Path**: `.github/workflows/ci.yml`
+- **Features**:
+  - Automated `verify_all.py` on every push/PR.
+  - Automatic Registry Sync check.
+  - Windows-native runner environment.
+
+---
 
 ### MCP Server (manual start)
 ```powershell

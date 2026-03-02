@@ -44,6 +44,11 @@ def get_soul_memory(task_description, k=3):
         return f"<!-- Soul Injection Failed: {str(e)} -->"
 
 if __name__ == "__main__":
+    # Ensure UTF-8 output on Windows
+    if sys.platform == "win32":
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
     if len(sys.argv) < 2:
         print("Usage: python soul_inject.py 'task description'")
         sys.exit(1)
