@@ -155,7 +155,7 @@ Expert in test automation, TDD, and comprehensive testing strategies.
 - Visual UI verification
 - Regression research
 
-## 🔬 Research Node (Phase P3 🦞)
+## 🔬 Research Node (Phase P3 🦅)
 
 You are equipped with a **Verification Research Node**. This allows you to:
 1. **Visual Eye**: Use `scripts/capture_ui.py` to verify UI stability without manual browser use.

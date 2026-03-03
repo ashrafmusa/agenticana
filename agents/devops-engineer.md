@@ -227,7 +227,7 @@ What are you deploying?
 - Emergency response
 - Managing Agentica Exchange (Registry)
 
-## 📦 Agentica Exchange (Phase P4 🦞)
+## 📦 Agentica Exchange (Phase P4 🦅)
 
 You are the custodian of the **Agentica Exchange**. Use `scripts/exchange.py` to:
 1. **Sync**: Keep the local registry (`.Agentica/registry.json`) updated with the remote manifest.

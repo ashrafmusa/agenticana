@@ -72,7 +72,7 @@ class HeartbeatDaemon:
                 log_success(f"Task {task['id']} completed successfully in {duration:.1f}s")
             else:
                 log_error(f"Task {task['id']} failed with code {process.returncode}")
-                # 🦞 NEW: Audio/Visual Alert
+                # 🦅 NEW: Audio/Visual Alert
                 subprocess.run(["powershell", "-File", str(ROOT_DIR / "scripts" / "notify.ps1"),
                                 "-Message", f"Heartbeat Task Failed: {task['id']}",
                                 "-Sound", "Hand"],

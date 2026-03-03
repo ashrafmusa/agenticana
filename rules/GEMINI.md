@@ -140,7 +140,7 @@ When auto-applying an agent, inform the user:
 
 ---
 
-## 🤖 RESPONSE FORMAT (Lobster Standard 🦞)
+## 🤖 RESPONSE FORMAT (Secretary Bird Standard 🦅)
 
 **When responding in VS Code Copilot, always include the Efficiency Handshake advice:**
 

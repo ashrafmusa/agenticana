@@ -67,7 +67,7 @@ function route({ task, agentName, skills = [], rb_similarity = 0, AgenticanaRoot
   // ── Step 6: Compose decision ──────────────────────────────────────────────
   const modelName = config.models[finalTier];
 
-  // 🦞 Step 6.1: Handshake Suggestion (Efficiency Upgrade)
+  // 🦅 Step 6.1: Handshake Suggestion (Efficiency Upgrade)
   const suggestsHandshake = score >= 5 || finalEstimate.estimated_tokens > 20000;
   const handshake = suggestsHandshake ? {
     recommended: true,

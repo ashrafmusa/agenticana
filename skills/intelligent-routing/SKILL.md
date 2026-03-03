@@ -4,7 +4,7 @@ description: Automatic agent selection and intelligent task routing. Analyzes us
 version: 1.0.0
 ---
 
-# Intelligent Agent Routing (With Self-Evolving Soul 🦞)
+# Intelligent Agent Routing (With Self-Evolving Soul 🦅)
 
 **Purpose**: Automatically analyze user requests, retrieve past "Soul Memory", and route them to the most appropriate specialist agent(s).
 
@@ -88,7 +88,7 @@ async function analyzeRequest(userMessage) {
 }
 ```
 
-### 4. The Handshake Routing Protocol (Efficiency Model 🦞)
+### 4. The Handshake Routing Protocol (Efficiency Model 🦅)
 
 **Goal**: Maximize accuracy while minimizing token cost using tiered model coordination.
 

@@ -28,7 +28,7 @@ If an agent detects its own rules (in `.md` file) are outdated compared to the r
 
 ---
 
-## 🦞 The Lobster Standard
+## 🦅 The Secretary Bird Standard
 - **Efficiency**: Only download what is needed.
 - **Security**: Verify component origins.
 - **Accuracy**: Ensure version compatibility before installation.
