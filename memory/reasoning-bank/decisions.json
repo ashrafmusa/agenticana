@@ -2,7 +2,7 @@
   "version": "2.0",
   "description": "Agenticana ReasoningBank — stores past agent decisions for pattern reuse",
   "last_consolidated": null,
-  "total_decisions": 15,
+  "total_decisions": 18,
   "decisions": [
     {
       "id": "rb-001",
@@ -376,6 +376,112 @@
         "cognitive-load-reduction",
         "audit-implementation"
       ]
+    },
+    {
+      "id": "rb-111d3079",
+      "timestamp": "2026-03-03T00:13:31.497403+00:00",
+      "task": "Fix \"Too many re-renders\" infinite loop on /projects/create route in AccrediTex React app",
+      "task_type": "user-recorded",
+      "agent": "debugger",
+      "decision": "Split useProjectWizard's validateCurrentStep into two functions: (1) computeCurrentStepValidation — pure, no state updates, safe to call during render; (2) validateCurrentStep — calls setValidationErrors, only called from event handlers. Changed canProceedToNextStep to call the pure version only. The bug was canGoNext={canProceedToNextStep()} in CreateProjectWizard.tsx JSX prop invoking a function that called setValidationErrors on every render cycle.",
+      "outcome": "Infinite render loop eliminated. Build passes. App loads /projects/create without crashing.",
+      "success": true,
+      "tokens_used": 0,
+      "model_used": "unknown",
+      "embedding": [
+        0.07692307692307693,
+        0.07692307692307693,
+        0.07692307692307693,
+        0.07692307692307693,
+        0.07692307692307693,
+        0.07692307692307693,
+        0.07692307692307693,
+        0.07692307692307693,
+        0.07692307692307693,
+        0.07692307692307693,
+        0.07692307692307693,
+        0.07692307692307693,
+        0.07692307692307693
+      ],
+      "tags": [
+        "react",
+        "infinite-loop",
+        "too-many-rerenders",
+        "wizard",
+        "validation",
+        "useProjectWizard",
+        "accreditex"
+      ]
+    },
+    {
+      "id": "rb-66b9f9c4",
+      "timestamp": "2026-03-03T00:13:31.813359+00:00",
+      "task": "Fix service worker \"Failed to execute clone on Response: Response body is already used\" errors in AccrediTex",
+      "task_type": "user-recorded",
+      "agent": "debugger",
+      "decision": "Replaced 228-line complex multi-strategy service worker (v5) with a simple 72-line network-first implementation. Single fetch handler: try network → clone response before caching → fallback to cache on failure. Cache name changed to accreditex-v1. No pre-caching on install. Old caches deleted on activate.",
+      "outcome": "Service worker clone errors eliminated. public/service-worker.js now at 72 lines, clean network-first strategy.",
+      "success": true,
+      "tokens_used": 0,
+      "model_used": "unknown",
+      "embedding": [
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705,
+        0.058823529411764705
+      ],
+      "tags": [
+        "service-worker",
+        "response-clone",
+        "caching",
+        "accreditex",
+        "pwa"
+      ]
+    },
+    {
+      "id": "rb-ad61553f",
+      "timestamp": "2026-03-03T00:13:32.138583+00:00",
+      "task": "Fix MainRouter.tsx role-guard useEffect causing re-render loop in AccrediTex",
+      "task_type": "user-recorded",
+      "agent": "debugger",
+      "decision": "The access-control useEffect depended on full navigation object and whole currentUser, causing it to re-run on every render and repeatedly call setNavigation/setUnauthorizedAttempt. Fix: (1) Changed deps to navigation.view, navigation.section, currentUser?.role (primitives only). (2) Wrapped all state setters with conditional guards (only call if value is actually changing). (3) Added navigation.view !== dashboard guard before calling setNavigation to prevent redirect ping-pong. (4) Moved useModuleStore hook call to top of component (before any conditional returns) to fix Rules of Hooks violation.",
+      "outcome": "MainRouter no longer triggers spurious re-renders from the access-control effect. Build passes.",
+      "success": true,
+      "tokens_used": 0,
+      "model_used": "unknown",
+      "embedding": [
+        0.1111111111111111,
+        0.1111111111111111,
+        0.1111111111111111,
+        0.1111111111111111,
+        0.1111111111111111,
+        0.1111111111111111,
+        0.1111111111111111,
+        0.1111111111111111,
+        0.1111111111111111
+      ],
+      "tags": [
+        "react",
+        "useEffect",
+        "infinite-loop",
+        "MainRouter",
+        "navigation",
+        "accreditex",
+        "rules-of-hooks"
+      ]
     }
   ],
   "patterns": [
@@ -537,6 +643,49 @@
       ],
       "tags": [
         "marketing-metrics"
+      ]
+    },
+    {
+      "id": "pat-b9cc3f6b",
+      "name": "Accessibility Pattern",
+      "pattern": "Comprehensive UI/UX audit methodology: (1) Map all 34 routes and navigation hierarchy. (2) Analyze 6+ critical user journeys with click depth, time estimates (optimistic/realistic/pessimistic), and friction points. (3) Read top 10 complex pages to assess cognitive load (tab count, form length, modal usage). (4) Grep for accessibility patterns (aria-*, keyboard nav, focus management). (5) Estimate time-to-value for 10 common tasks. (6) Categorize improvements: Quick Wins (<1 day), Medium Effort (1-3 days), Strategic (1+ weeks). (7) Generate marketing-ready metrics (\"Complete X in Y minutes\"). (8) Provide competitive positioning vs Qualio, RLDatix, MasterControl.",
+      "frequency": 2,
+      "avg_success_rate": 1.0,
+      "distilled_from": [
+        "rb-c49ee317",
+        "rb-8f3cd125"
+      ],
+      "tags": [
+        "accessibility"
+      ]
+    },
+    {
+      "id": "pat-71ca3df6",
+      "name": "Infinite Loop Pattern",
+      "pattern": "Split useProjectWizard's validateCurrentStep into two functions: (1) computeCurrentStepValidation — pure, no state updates, safe to call during render; (2) validateCurrentStep — calls setValidationErrors, only called from event handlers. Changed canProceedToNextStep to call the pure version only. The bug was canGoNext={canProceedToNextStep()} in CreateProjectWizard.tsx JSX prop invoking a function that called setValidationErrors on every render cycle.",
+      "frequency": 2,
+      "avg_success_rate": 1.0,
+      "distilled_from": [
+        "rb-111d3079",
+        "rb-ad61553f"
+      ],
+      "tags": [
+        "infinite-loop"
+      ]
+    },
+    {
+      "id": "pat-3a8ce461",
+      "name": "Accreditex Pattern",
+      "pattern": "Split useProjectWizard's validateCurrentStep into two functions: (1) computeCurrentStepValidation — pure, no state updates, safe to call during render; (2) validateCurrentStep — calls setValidationErrors, only called from event handlers. Changed canProceedToNextStep to call the pure version only. The bug was canGoNext={canProceedToNextStep()} in CreateProjectWizard.tsx JSX prop invoking a function that called setValidationErrors on every render cycle.",
+      "frequency": 3,
+      "avg_success_rate": 1.0,
+      "distilled_from": [
+        "rb-111d3079",
+        "rb-66b9f9c4",
+        "rb-ad61553f"
+      ],
+      "tags": [
+        "accreditex"
       ]
     }
   ]

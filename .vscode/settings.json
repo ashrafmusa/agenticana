@@ -76,5 +76,8 @@
   },
 
   // ── Recommended extensions notification ──────────────────────────────────────
-  "extensions.ignoreRecommendations": false
+  "extensions.ignoreRecommendations": false,
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  }
 }
