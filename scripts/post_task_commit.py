@@ -9,10 +9,16 @@ Runs AFTER a dashboard task completes.
 - Pushes to GitHub
 """
 import sys
+import io
 import json
 import subprocess
 from pathlib import Path
 from datetime import datetime
+
+# Force UTF-8 on Windows so emoji in commit messages don't crash
+if sys.platform == "win32":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROADMAP  = BASE_DIR / "ROADMAP.md"
@@ -27,9 +33,12 @@ def log(msg: str):
 
 def git(args: list, cwd=BASE_DIR) -> str:
     result = subprocess.run(
-        ["git"] + args, capture_output=True, text=True, cwd=str(cwd)
+        ["git"] + args, capture_output=True, text=True,
+        encoding="utf-8", errors="replace", cwd=str(cwd)
     )
-    return (result.stdout + result.stderr).strip()
+    stdout = result.stdout or ""
+    stderr = result.stderr or ""
+    return (stdout + stderr).strip()
 
 
 def changed_files() -> list[str]:
