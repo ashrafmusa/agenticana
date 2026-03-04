@@ -117,19 +117,19 @@
                             ⚡ Launch Debate
                         </button>
                     </div>
-                    
+
                     <!-- Agent Roster -->
                     <div id="debate-agents-bar" class="flex flex-wrap gap-2 mb-5">
                         <!-- filled by JS -->
                         <span class="text-xs text-slate-600 italic">4 agents will debate when launched</span>
                     </div>
-                    
+
                     <!-- Live Transcript -->
                     <div id="debate-transcript"
                         class="bg-bird-deep/60 rounded-2xl p-5 min-h-[260px] max-h-[320px] overflow-y-auto border border-white/5 font-mono text-xs space-y-2 mb-5 scrollbar-hide">
                         <p class="text-slate-500 italic text-center pt-10">⚡ Launch a debate to see agents argue in real-time...</p>
                     </div>
-                    
+
                     <!-- Results Panel (hidden until debate finishes) -->
                     <div id="debate-results" class="hidden">
                         <div class="border-t border-white/5 pt-5 space-y-4">
@@ -637,30 +637,28 @@
                     intelGrid.innerHTML = '';
                     data.intel.forEach(repo => {
                         const card = document.createElement('div');
-                        card.className = "glass p-5 rounded-3xl border-white/5 card-hover flex flex-col justify-between";
+                        card.className = 'glass p-5 rounded-3xl border-white/5 card-hover flex flex-col justify-between';
                         const gaps = repo.trending_requests || [];
-                        card.innerHTML = '<div><h4 class="text-xs font-bold text-slate-400 uppercase mb-2 tracking-tighter">' + repo.name.split('/')[1] + '</h4><div class="space-y-2">' + (gaps.map(g => '<div class="bg-bird-accent/5 p-2 rounded-xl text-[10px] text-bird-accent font-semibold border border-bird-accent/10">↳ ' + g + '</div>').join('')) + '</div></div><div class="mt-4 flex justify-between items-center"><span class="text-[9px] text-slate-500 font-mono italic">Market Observation</span><span class="w-1.5 h-1.5 rounded-full bg-bird-accent"></span></div>';
+                        const repoName = (repo.repo || repo.name || 'unknown').split('/').pop();
+                        const fullPath = repo.repo || repo.name || '—';
+                        const scannedAt = repo.scanned_at ? repo.scanned_at.slice(0, 10) : '';
+                        const gapsHtml = gaps.length > 0
+                            ? gaps.map(g => `<div class="bg-bird-accent/5 p-2 rounded-xl text-[10px] text-bird-accent font-semibold border border-bird-accent/10">↳ ${g}</div>`).join('')
+                            : '<div class="text-[10px] text-slate-600 italic">No gaps detected</div>';
+                        card.innerHTML = `
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-300 uppercase mb-1 tracking-tighter">${repoName}</h4>
+                                <p class="text-[9px] text-slate-600 font-mono mb-3">${fullPath}</p>
+                                <div class="space-y-2">${gapsHtml}</div>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <span class="text-[9px] text-slate-500 font-mono italic">${scannedAt}</span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-bird-accent animate-pulse"></span>
+                            </div>`;
                         intelGrid.appendChild(card);
                     });
-                }
-
-                // Update Simulacrum
-                if (data.simulacrum) {
-                    const status = document.getElementById('debate-status');
-                    if (status) status.innerText = "VOTING COMPLETE";
-
-                    const topic = document.getElementById('debate-topic');
-                    if (topic) topic.innerText = data.simulacrum.topic;
-
-                    const content = document.getElementById('debate-content');
-                    if (content) {
-                        let html = '<div class="space-y-4">';
-                        data.simulacrum.transcript.slice(-4).forEach(entry => {
-                            html += '<div class="flex gap-3"><div class="text-[10px] font-bold text-bird-accent w-24 shrink-0 uppercase">' + entry.speaker + '</div><div class="text-xs text-slate-300 italic">"' + entry.content.substring(0, 100) + '..."</div></div>';
-                        });
-                        html += '<div class="mt-6 pt-4 border-t border-white/5 text-sm font-bold text-bird-success">🏆 Winner: ' + data.simulacrum.winning_agent + '</div></div>';
-                        content.innerHTML = html;
-                    }
+                } else if (intelGrid && (!data.intel || data.intel.length === 0)) {
+                    intelGrid.innerHTML = '<div class="flex items-center justify-center col-span-full h-full text-slate-600 italic text-sm">No intel yet — click 🔍 Scan Competitors to load data</div>';
                 }
 
                 // Update Feed (Logs)
