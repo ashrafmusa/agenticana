@@ -32,6 +32,7 @@ This is the living roadmap for Agenticana. Items marked **open** are available f
 | P20 | Multi-Model Simulacrum — cross-LLM agent debates | ✅ Shipped v6.1 |
 | P21 | Swarm Result Merger — parallel output consolidation | ✅ Shipped v6.1 |
 | P26 | Voice-to-Code Bridge | ✅ Auto-Evolved 2026-03-04 |
+| P27 | Cross-LLM Debate Voting | ✅ Auto-Evolved 2026-03-04 |
 | P22 | Sovereign Dashboard — Flask API + live log streaming | ✅ Shipped v7.0 |
 
 ---

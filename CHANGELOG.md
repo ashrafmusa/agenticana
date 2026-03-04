@@ -6,6 +6,21 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [P27] 2026-03-04 — Cross-LLM Debate Voting
+
+### Added
+- **Cross-LLM Debate Voting**: Extended Simulacrum that uses multiple LLM providers (Gemini, OpenAI, Anthropic) as different agent 'brains' to produce genuinely diverse opinions.
+- Plan document: `plans/p27_cross_llm_debate.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P27 as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
 ## [P26] 2026-03-04 — Voice-to-Code Bridge
 
 ### Added
