@@ -214,6 +214,19 @@
                 feed.scrollTop = feed.scrollHeight;
             }
 
+                // Renders pre-converted ANSI/HTML content directly (no escaping)
+                function appendFeedLineHtml(html, fallbackCls = 'text-slate-300') {
+                    const feed = document.getElementById('swarm-feed');
+                    if (!feed) return;
+                    const placeholder = feed.querySelector('.italic');
+                    if (placeholder) placeholder.remove();
+                    const div = document.createElement('div');
+                    div.className = 'flex gap-2 py-0.5 border-l border-white/5 pl-2';
+                    div.innerHTML = `<span class="text-slate-500 shrink-0">›</span> <span class="${fallbackCls} font-mono text-xs">${html}</span>`;
+                    feed.appendChild(div);
+                    feed.scrollTop = feed.scrollHeight;
+                }
+
             function appendFeedBanner(text, cls = 'text-amber-400') {
                 const feed = document.getElementById('swarm-feed');
                 if (!feed) return;
@@ -224,6 +237,43 @@
                     div.innerHTML = `<span class="${cls} font-bold text-sm">${text}</span>`;
                     feed.appendChild(div);
                     feed.scrollTop = feed.scrollHeight;
+                }
+
+                // ── ANSI → HTML color converter ───────────────────────────────────────
+                const ANSI_COLORS = {
+                    '30': '#64748b', '31': '#f87171', '32': '#4ade80',
+                    '33': '#facc15', '34': '#60a5fa', '35': '#c084fc',
+                    '36': '#22d3ee', '37': '#e2e8f0', '90': '#475569',
+                    '91': '#f87171', '92': '#4ade80', '93': '#facc15',
+                    '94': '#60a5fa', '95': '#c084fc', '96': '#22d3ee', '97': '#f8fafc'
+                };
+
+                function ansiToHtml(raw) {
+                    // Escape HTML first
+                    let s = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    // Convert ANSI color codes to <span> tags, strip bold/reset
+                    s = s.replace(/\x1b\[([0-9;]*)m/g, (_, codes) => {
+                        if (!codes || codes === '0') return '</span>';
+                        const parts = codes.split(';');
+                        const colors = parts.filter(c => ANSI_COLORS[c]);
+                        if (colors.length) return `<span style="color:${ANSI_COLORS[colors[colors.length - 1]]};font-weight:${parts.includes('1') ? 'bold' : 'normal'}">`;
+                        if (parts.includes('1')) return '<span style="font-weight:bold">';
+                        return '</span>';
+                    });
+                    // Also handle ESC chars that come through as literal escape sequences in text
+                    s = s.replace(/\[([0-9;]*)m/g, (_, codes) => {
+                        if (!codes || codes === '0') return '';
+                        const parts = codes.split(';');
+                        const colors = parts.filter(c => ANSI_COLORS[c]);
+                        if (colors.length) return `<span style="color:${ANSI_COLORS[colors[colors.length - 1]]}">`;
+                        return '';
+                    });
+                    return s;
+                }
+
+                function stripAnsi(raw) {
+                    // Strip all ANSI/escape sequences, return plain text
+                    return raw.replace(/\x1b\[[0-9;]*m/g, '').replace(/\[[0-9;]*m/g, '').trim();
                 }
 
                 // ── Live log streamer via /api/logs offset ────────────────────────────
@@ -237,26 +287,29 @@
                         const data = await r.json();
                         if (data.lines && data.lines.length > 0) {
                             data.lines.forEach(raw => {
-                                const line = raw.trim();
-                                if (!line) return;
-                                if (line.startsWith('---')) {
-                                    appendFeedBanner(line, 'text-amber-400');
-                                } else if (line.startsWith('[+]') || line.match(/complete|PASS|saved/i)) {
-                                    appendFeedLine(line, 'text-green-400');
-                                } else if (line.startsWith('[!]') || line.match(/WARN|warning/i)) {
-                                    appendFeedLine(line, 'text-yellow-400');
-                                } else if (line.match(/error|FAIL|exception/i)) {
-                                    appendFeedLine(line, 'text-red-400');
-                                } else if (line.startsWith('[*]')) {
-                                    appendFeedLine(line, 'text-sky-400');
-                                } else {
-                                    appendFeedLine(line);
-                                }
-                            });
-                        }
-                        logOffset = data.offset;
-                    } catch (e) { /* silent */ }
-                }
+                            const stripped = stripAnsi(raw);
+                            if (!stripped) return;
+                            const html = ansiToHtml(raw.trimEnd());
+
+                            if (stripped.startsWith('---')) {
+                                appendFeedBanner(stripped, 'text-amber-400');
+                            } else if (stripped.startsWith('[+]') || stripped.match(/complete|PASS|saved to/i)) {
+                                appendFeedLineHtml(html, 'text-green-400');
+                            } else if (stripped.startsWith('[!]') || stripped.match(/WARN|warning/i)) {
+                                appendFeedLineHtml(html, 'text-yellow-400');
+                            } else if (stripped.match(/\berror\b|FAIL|exception/i)) {
+                                appendFeedLineHtml(html, 'text-red-400');
+                            } else if (stripped.startsWith('[*]')) {
+                                appendFeedLineHtml(html, 'text-sky-400');
+                            } else {
+                                appendFeedLineHtml(html, 'text-slate-300');
+                            }
+                        });
+                    }
+                    logOffset = data.offset;
+                } catch (e) { /* silent */ }
+            }
+
 
                 function startStreaming(fromOffset) {
                     logOffset = fromOffset || logOffset;
