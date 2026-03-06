@@ -1,0 +1,22 @@
+name: Agenticana CI Agent
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  agenticana-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements.txt 2>/dev/null || true
+      - name: Run Agenticana Verify
+        run: python scripts/verify_all.py . --ci
+      - name: Guardian Lint Check
+        run: python scripts/lint_runner.py .

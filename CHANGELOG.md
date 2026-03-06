@@ -6,6 +6,21 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [P29] 2026-03-06 — GitHub Actions CI Agent
+
+### Added
+- **GitHub Actions CI Agent**: A GitHub Actions workflow that runs the full Agenticana audit chain (Guardian → Sentinel → tests → Lighthouse) on every PR automatically.
+- Plan document: `plans/p29_github_actions_agent.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P29 as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
 ## [P28] 2026-03-06 — Local-First Vector Storage
 
 ### Added

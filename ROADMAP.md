@@ -34,6 +34,7 @@ This is the living roadmap for Agenticana. Items marked **open** are available f
 | P26 | Voice-to-Code Bridge | ✅ Auto-Evolved 2026-03-04 |
 | P27 | Cross-LLM Debate Voting | ✅ Auto-Evolved 2026-03-04 |
 | P28 | Local-First Vector Storage | ✅ Auto-Evolved 2026-03-06 |
+| P29 | GitHub Actions CI Agent | ✅ Auto-Evolved 2026-03-06 |
 | P22 | Sovereign Dashboard — Flask API + live log streaming | ✅ Shipped v7.0 |
 
 ---
