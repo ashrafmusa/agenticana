@@ -4,6 +4,7 @@ Flask API with unbuffered subprocess output and incremental log endpoint.
 """
 import os
 import json
+import time
 import subprocess
 import threading
 from pathlib import Path
@@ -16,6 +17,40 @@ BASE_DIR = Path(__file__).resolve().parent.parent   # d:\_Projects\Agentica
 DASHBOARD_DIR = BASE_DIR / "dashboard"
 AUTH_KEY_PATH = BASE_DIR / ".Agentica" / "auth.key"
 LOG_PATH = BASE_DIR / ".Agentica" / "logs" / "dashboard_action.log"
+BILLING_EVENTS_PATH = BASE_DIR / ".Agentica" / "billing_events.jsonl"
+SUBSCRIPTION_PATH = BASE_DIR / ".Agentica" / "subscription.json"
+
+BILLING_LOCK = threading.Lock()
+
+DEFAULT_PLAN = "pro"
+VALID_PLANS = {"starter", "pro", "team", "enterprise"}
+
+PLAN_FEATURES = {
+    "starter": {
+        "tasks": {"intel", "audit"},
+        "debate": False,
+    },
+    "pro": {
+        "tasks": {"intel", "audit", "evolve"},
+        "debate": True,
+    },
+    "team": {
+        "tasks": {"intel", "audit", "evolve"},
+        "debate": True,
+    },
+    "enterprise": {
+        "tasks": {"intel", "audit", "evolve"},
+        "debate": True,
+    },
+}
+
+# Estimated unit economics per operation, used for profitability telemetry.
+PRICING_MODEL = {
+    "run:intel": {"estimated_cost_usd": 0.02, "estimated_revenue_usd": 0.10, "estimated_value_usd": 0.30},
+    "run:audit": {"estimated_cost_usd": 0.04, "estimated_revenue_usd": 0.19, "estimated_value_usd": 0.60},
+    "run:evolve": {"estimated_cost_usd": 0.12, "estimated_revenue_usd": 0.99, "estimated_value_usd": 2.50},
+    "debate:start": {"estimated_cost_usd": 0.08, "estimated_revenue_usd": 0.49, "estimated_value_usd": 1.20},
+}
 
 app = Flask(__name__, static_folder=str(DASHBOARD_DIR))
 
@@ -44,6 +79,121 @@ def read_json(path: Path, default=None):
     except Exception as e:
         print(f"[WARN] Could not read {path}: {e}")
     return default
+
+
+def resolve_plan() -> str:
+    """Resolve plan from header override or subscription file."""
+    header_plan = request.headers.get("X-Agentica-Plan", "").strip().lower()
+    if header_plan in VALID_PLANS:
+        return header_plan
+
+    subscription = read_json(SUBSCRIPTION_PATH, {})
+    file_plan = str(subscription.get("plan", DEFAULT_PLAN)).strip().lower()
+    if file_plan in VALID_PLANS:
+        return file_plan
+
+    return DEFAULT_PLAN
+
+
+def is_feature_allowed(plan: str, task: str | None = None, debate: bool = False) -> bool:
+    features = PLAN_FEATURES.get(plan, PLAN_FEATURES[DEFAULT_PLAN])
+    if debate:
+        return bool(features.get("debate", False))
+    if task:
+        return task in features.get("tasks", set())
+    return True
+
+
+def get_rate_key(event_type: str, action: str) -> str:
+    return f"{event_type}:{action}"
+
+
+def get_pricing(event_type: str, action: str) -> dict:
+    return PRICING_MODEL.get(
+        get_rate_key(event_type, action),
+        {"estimated_cost_usd": 0.01, "estimated_revenue_usd": 0.03, "estimated_value_usd": 0.10},
+    )
+
+
+def append_billing_event(event: dict):
+    BILLING_EVENTS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with BILLING_LOCK:
+        with open(BILLING_EVENTS_PATH, "a", encoding="utf-8") as f:
+            f.write(json.dumps(event, ensure_ascii=False) + "\n")
+
+
+def record_billing_event(
+    *,
+    event_type: str,
+    action: str,
+    plan: str,
+    status: str,
+    duration_ms: int = 0,
+    metadata: dict | None = None,
+):
+    pricing = get_pricing(event_type, action)
+    event = {
+        "timestamp": datetime.now().isoformat(),
+        "event_type": event_type,
+        "action": action,
+        "plan": plan,
+        "status": status,
+        "duration_ms": duration_ms,
+        "estimated_cost_usd": pricing["estimated_cost_usd"],
+        "estimated_revenue_usd": pricing["estimated_revenue_usd"],
+        "estimated_value_usd": pricing["estimated_value_usd"],
+    }
+    if metadata:
+        event["metadata"] = metadata
+    append_billing_event(event)
+
+
+def read_billing_events() -> list[dict]:
+    if not BILLING_EVENTS_PATH.exists():
+        return []
+
+    events = []
+    with open(BILLING_EVENTS_PATH, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                events.append(json.loads(line))
+            except Exception:
+                continue
+    return events
+
+
+def summarize_billing(plan: str) -> dict:
+    now = datetime.now()
+    month_prefix = now.strftime("%Y-%m")
+
+    all_events = read_billing_events()
+    month_events = [e for e in all_events if str(e.get("timestamp", "")).startswith(month_prefix)]
+
+    revenue = sum(float(e.get("estimated_revenue_usd", 0.0)) for e in month_events)
+    cost = sum(float(e.get("estimated_cost_usd", 0.0)) for e in month_events)
+    value = sum(float(e.get("estimated_value_usd", 0.0)) for e in month_events)
+    profit = revenue - cost
+    margin_pct = (profit / revenue * 100.0) if revenue > 0 else 0.0
+
+    actions = {}
+    for e in month_events:
+        key = f"{e.get('event_type', 'unknown')}:{e.get('action', 'unknown')}"
+        actions[key] = actions.get(key, 0) + 1
+
+    return {
+        "plan": plan,
+        "month": month_prefix,
+        "events_this_month": len(month_events),
+        "estimated_revenue_usd": round(revenue, 4),
+        "estimated_cost_usd": round(cost, 4),
+        "estimated_value_usd": round(value, 4),
+        "estimated_profit_usd": round(profit, 4),
+        "gross_margin_pct": round(margin_pct, 2),
+        "top_actions": actions,
+    }
 
 
 def get_recent_logs(n: int = 50):
@@ -92,6 +242,7 @@ def api_status():
 
     registry_data = read_json(registry_path, {})
     vector_data   = read_json(vector_path, {})
+    plan = resolve_plan()
 
     status = {
         "project": "Agenticana",
@@ -104,6 +255,7 @@ def api_status():
         "intel": read_json(intel_path, []),
         "simulacrum": get_latest_simulacrum(),
         "logs": get_recent_logs(),
+        "billing": summarize_billing(plan),
     }
     return jsonify(status)
 
@@ -114,6 +266,7 @@ def api_run():
         return jsonify({"error": "Unauthorized"}), 401
 
     task = request.args.get("task", "").strip()
+    plan = resolve_plan()
     print(f"[TASK] Received run request for: '{task}'")
 
     SCRIPT_MAP = {
@@ -127,6 +280,22 @@ def api_run():
         print(f"[ERROR] Unknown task: '{task}' — valid: {list(SCRIPT_MAP.keys())}")
         return jsonify({"error": "Task not found", "task": task, "valid": list(SCRIPT_MAP.keys())}), 404
 
+    if not is_feature_allowed(plan, task=task):
+        record_billing_event(
+            event_type="run",
+            action=task,
+            plan=plan,
+            status="blocked_plan",
+            metadata={"reason": "upgrade_required"},
+        )
+        return jsonify({
+            "error": "Upgrade required",
+            "plan": plan,
+            "task": task,
+            "required_plan": "pro" if task == "evolve" else "starter",
+            "message": f"Task '{task}' is not available on plan '{plan}'.",
+        }), 403
+
     LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     log_file_handle = open(LOG_PATH, "a", encoding="utf-8")
     log_file_handle.write(f"\n--- Starting '{task}' at {datetime.now()} ---\n")
@@ -135,12 +304,25 @@ def api_run():
     env = os.environ.copy()
     env["PYTHONUNBUFFERED"] = "1"
 
+    start_time = time.time()
+    record_billing_event(event_type="run", action=task, plan=plan, status="started")
+
     proc = subprocess.Popen(cmd, stdout=log_file_handle, stderr=log_file_handle, cwd=str(BASE_DIR), env=env)
     print(f"[EXEC] Launched: {' '.join(cmd)}")
 
     # ── Background watcher: fires post-commit hook when task finishes ──────────
     def watch_and_commit(process, lf, t):
         process.wait()  # block until task subprocess exits
+        duration_ms = int((time.time() - start_time) * 1000)
+        task_status = "success" if process.returncode == 0 else "failed"
+        record_billing_event(
+            event_type="run",
+            action=t,
+            plan=plan,
+            status=task_status,
+            duration_ms=duration_ms,
+            metadata={"returncode": process.returncode},
+        )
         lf.write(f"\n--- Task '{t}' completed. Running auto-commit hook... ---\n")
         lf.flush()
         hook_cmd = ["python", str(BASE_DIR / "scripts" / "post_task_commit.py"), t]
@@ -169,6 +351,23 @@ def api_debate():
         return jsonify({"error": "Unauthorized"}), 401
 
     topic = request.args.get("topic", "Should Agenticana adopt voice-to-code as its next major feature?").strip()
+    plan = resolve_plan()
+
+    if not is_feature_allowed(plan, debate=True):
+        record_billing_event(
+            event_type="debate",
+            action="start",
+            plan=plan,
+            status="blocked_plan",
+            metadata={"reason": "upgrade_required"},
+        )
+        return jsonify({
+            "error": "Upgrade required",
+            "plan": plan,
+            "required_plan": "pro",
+            "message": "Debate chamber is available on Pro and above.",
+        }), 403
+
     agents_param = request.args.get("agents", "backend-specialist,security-auditor,frontend-specialist,devops-engineer")
     agents = [a.strip() for a in agents_param.split(",") if a.strip()]
     rounds = int(request.args.get("rounds", 2))
@@ -184,6 +383,9 @@ def api_debate():
 
     env = os.environ.copy()
     env["PYTHONUNBUFFERED"] = "1"
+    start_time = time.time()
+
+    record_billing_event(event_type="debate", action="start", plan=plan, status="started")
 
     proc = subprocess.Popen(
         cmd,
@@ -192,6 +394,22 @@ def api_debate():
         cwd=str(BASE_DIR),
         env=env
     )
+
+    def watch_debate(process):
+        process.wait()
+        duration_ms = int((time.time() - start_time) * 1000)
+        debate_status = "success" if process.returncode == 0 else "failed"
+        record_billing_event(
+            event_type="debate",
+            action="start",
+            plan=plan,
+            status=debate_status,
+            duration_ms=duration_ms,
+            metadata={"returncode": process.returncode, "agents": len(agents)},
+        )
+
+    threading.Thread(target=watch_debate, args=(proc,), daemon=True).start()
+
     print(f"[DEBATE] Launched simulacrum: {topic[:60]}")
 
     offset = DEBATE_LOG_PATH.stat().st_size if DEBATE_LOG_PATH.exists() else 0
@@ -272,6 +490,15 @@ def api_logs_clear():
     if LOG_PATH.exists():
         LOG_PATH.write_text("", encoding="utf-8")
     return jsonify({"status": "cleared"})
+
+
+@app.route("/api/billing/summary")
+def api_billing_summary():
+    if not check_auth():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    plan = resolve_plan()
+    return jsonify(summarize_billing(plan))
 
 
 if __name__ == "__main__":

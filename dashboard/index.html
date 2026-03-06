@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <!-- Agenticana v6.0 Secretary Bird Edition 🦅 — High-End Dashboard -->
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenticana | Sovereign Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;500;700&display=swap"
+        rel="stylesheet">
     <script>
         window.tailwindConfig = {
             theme: {
@@ -32,25 +35,55 @@
         setTimeout(() => { if (window.tailwind) window.tailwind.config = window.tailwindConfig; }, 100);
     </script>
     <style>
-        body { background-color: #030712; color: #f1f5f9; }
-        .glass { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .bird-gradient { background: linear-gradient(135deg, #38bdf8 0%, #1e40af 100%); }
-        .glow-accent { box-shadow: 0 0 30px rgba(56, 189, 248, 0.15); }
-        .stomp-shadow { box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .card-hover:hover { border-color: rgba(56, 189, 248, 0.3); transform: translateY(-2px); transition: all 0.3s; }
+        body {
+            background-color: #030712;
+            color: #f1f5f9;
+        }
+
+        .glass {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bird-gradient {
+            background: linear-gradient(135deg, #38bdf8 0%, #1e40af 100%);
+        }
+
+        .glow-accent {
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
+        }
+
+        .stomp-shadow {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .card-hover:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-2px);
+            transition: all 0.3s;
+        }
     </style>
 </head>
+
 <body class="min-h-screen py-6 px-4 md:px-12 font-sans">
     <div class="max-w-[1600px] mx-auto">
 
         <!-- TOP NAVIGATION -->
         <nav class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
             <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bird-gradient rounded-2xl flex items-center justify-center text-3xl shadow-lg stomp-shadow">🦅</div>
+                <div
+                    class="w-14 h-14 bird-gradient rounded-2xl flex items-center justify-center text-3xl shadow-lg stomp-shadow">
+                    🦅</div>
                 <div>
-                    <h1 class="text-3xl font-display font-bold tracking-tight">Agenticana <span class="text-bird-accent">v6.0</span></h1>
-                    <div class="flex items-center gap-2 text-xs text-slate-500 uppercase tracking-widest font-semibold mt-1">
+                    <h1 class="text-3xl font-display font-bold tracking-tight">Agenticana <span
+                            class="text-bird-accent">v6.0</span></h1>
+                    <div
+                        class="flex items-center gap-2 text-xs text-slate-500 uppercase tracking-widest font-semibold mt-1">
                         <span class="w-2 h-2 rounded-full bg-bird-success animate-pulse"></span>
                         Sovereign Loop Active
                     </div>
@@ -64,7 +97,8 @@
                         <p class="text-sm font-bold text-bird-accent" id="status-text">SYNCING...</p>
                     </div>
                     <div class="h-8 w-px bg-white/10"></div>
-                    <button onclick="localStorage.removeItem('agentica_auth'); location.reload();" class="text-xs text-slate-400 hover:text-white transition-colors">Logout</button>
+                    <button onclick="localStorage.removeItem('agentica_auth'); location.reload();"
+                        class="text-xs text-slate-400 hover:text-white transition-colors">Logout</button>
                 </div>
             </div>
         </nav>
@@ -80,14 +114,17 @@
                     <div class="flex justify-between items-end mb-8">
                         <div>
                             <h2 class="text-2xl font-display font-bold">Market Intelligence Swarm</h2>
-                            <p class="text-slate-400 text-sm mt-1">Tracking 11 competitors for feature gaps & weaknesses.</p>
+                            <p class="text-slate-400 text-sm mt-1">Tracking 11 competitors for feature gaps &
+                                weaknesses.</p>
                         </div>
-                        <div class="bg-bird-accent/10 px-4 py-2 rounded-xl text-bird-accent border border-bird-accent/20 font-bold text-xs uppercase">
+                        <div
+                            class="bg-bird-accent/10 px-4 py-2 rounded-xl text-bird-accent border border-bird-accent/20 font-bold text-xs uppercase">
                             Autonomous Tracking
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-[400px] overflow-y-auto scrollbar-hide pr-2" id="intel-grid">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-[400px] overflow-y-auto scrollbar-hide pr-2"
+                        id="intel-grid">
                         <!-- Intel Cards Injected Here -->
                         <div class="flex items-center justify-center col-span-full h-full text-slate-600 italic">
                             Scanning repositories for gaps...
@@ -102,14 +139,16 @@
                             <span class="p-2 bird-gradient rounded-lg text-lg">🧠</span>
                             Debate Chamber
                         </h2>
-                        <div id="debate-status" class="text-xs font-mono text-bird-gold bg-bird-gold/10 px-3 py-1 rounded-full border border-bird-gold/20">
+                        <div id="debate-status"
+                            class="text-xs font-mono text-bird-gold bg-bird-gold/10 px-3 py-1 rounded-full border border-bird-gold/20">
                             IDLE
                         </div>
                     </div>
 
                     <!-- Topic Input + Launch -->
                     <div class="flex gap-3 mb-5">
-                        <input id="debate-topic-input" type="text" placeholder="Enter debate topic (or leave blank for default)..."
+                        <input id="debate-topic-input" type="text"
+                            placeholder="Enter debate topic (or leave blank for default)..."
                             class="flex-1 bg-bird-deep/60 border border-white/10 rounded-xl px-4 py-2 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-bird-accent/40"
                             value="Should Agenticana adopt voice-to-code as its next major feature?" />
                         <button id="btn-debate"
@@ -127,7 +166,8 @@
                     <!-- Live Transcript -->
                     <div id="debate-transcript"
                         class="bg-bird-deep/60 rounded-2xl p-5 min-h-[260px] max-h-[320px] overflow-y-auto border border-white/5 font-mono text-xs space-y-2 mb-5 scrollbar-hide">
-                        <p class="text-slate-500 italic text-center pt-10">⚡ Launch a debate to see agents argue in real-time...</p>
+                        <p class="text-slate-500 italic text-center pt-10">⚡ Launch a debate to see agents argue in
+                            real-time...</p>
                     </div>
 
                     <!-- Results Panel (hidden until debate finishes) -->
@@ -160,16 +200,20 @@
                 <!-- QUICK ACTIONS (NON-DEV FRIENDLY) -->
                 <section class="bird-gradient rounded-[40px] p-8 text-white stomp-shadow">
                     <h3 class="text-xl font-display font-bold mb-4">Evolution Commands</h3>
-                    <p class="text-blue-100 text-sm mb-8">Force Agenticana to self-improve based on identified market gaps.</p>
+                    <p class="text-blue-100 text-sm mb-8">Force Agenticana to self-improve based on identified market
+                        gaps.</p>
 
                     <div class="space-y-3">
-                        <button id="btn-intel" class="w-full bg-white text-bird-deep font-bold py-4 rounded-2xl hover:bg-bird-accent hover:text-white transition-all transform hover:scale-[1.02]">
+                        <button id="btn-intel"
+                            class="w-full bg-white text-bird-deep font-bold py-4 rounded-2xl hover:bg-bird-accent hover:text-white transition-all transform hover:scale-[1.02]">
                             🔍 Scan Competitors
                         </button>
-                        <button id="btn-evolve" class="w-full bg-white/10 text-white border border-white/20 font-bold py-4 rounded-2xl hover:bg-white/20 transition-all">
+                        <button id="btn-evolve"
+                            class="w-full bg-white/10 text-white border border-white/20 font-bold py-4 rounded-2xl hover:bg-white/20 transition-all">
                             🚀 Self-Evolve (P25)
                         </button>
-                        <button id="btn-audit" class="w-full bg-white/10 text-white border border-white/20 font-bold py-4 rounded-2xl hover:bg-white/20 transition-all">
+                        <button id="btn-audit"
+                            class="w-full bg-white/10 text-white border border-white/20 font-bold py-4 rounded-2xl hover:bg-white/20 transition-all">
                             🛡️ Health Audit
                         </button>
                     </div>
@@ -205,10 +249,39 @@
                     </div>
                 </section>
 
+                <!-- PROFITABILITY PANEL -->
+                <section class="glass rounded-[40px] p-8 border-white/5">
+                    <h3 class="text-lg font-display font-bold mb-6">Profitability</h3>
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-3">
+                            <p class="text-slate-500 text-[10px] uppercase tracking-widest">Plan</p>
+                            <p id="billing-plan" class="font-bold text-bird-accent mt-1">pro</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-3">
+                            <p class="text-slate-500 text-[10px] uppercase tracking-widest">Events</p>
+                            <p id="billing-events" class="font-bold text-slate-200 mt-1">0</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-3">
+                            <p class="text-slate-500 text-[10px] uppercase tracking-widest">Revenue</p>
+                            <p id="billing-revenue" class="font-bold text-green-400 mt-1">$0.00</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-3">
+                            <p class="text-slate-500 text-[10px] uppercase tracking-widest">Cost</p>
+                            <p id="billing-cost" class="font-bold text-amber-400 mt-1">$0.00</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-3 col-span-2">
+                            <p class="text-slate-500 text-[10px] uppercase tracking-widest">Gross Margin</p>
+                            <p id="billing-margin" class="font-bold text-sky-400 mt-1">0.00%</p>
+                            <p id="billing-profit" class="text-xs text-slate-400 mt-1">Profit: $0.00</p>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- ACTIVE SWARM (LIVE FEED) -->
                 <section class="glass rounded-[40px] p-8 border-bird-accent/5 overflow-hidden">
                     <h3 class="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">Shadow Swarm Feed</h3>
-                    <div id="swarm-feed" class="space-y-2 max-h-[300px] overflow-y-auto pr-2 scrollbar-hide text-[10px] font-mono">
+                    <div id="swarm-feed"
+                        class="space-y-2 max-h-[300px] overflow-y-auto pr-2 scrollbar-hide text-[10px] font-mono">
                         <!-- Swarm logs injected here -->
                         <p class="text-slate-600 italic">No active operations...</p>
                     </div>
@@ -229,131 +302,131 @@
             }
         }
 
-            let logOffset = 0;
-            let streamTimer = null;
-            let isStreaming = false;
+        let logOffset = 0;
+        let streamTimer = null;
+        let isStreaming = false;
 
-            // ── Feed helpers ──────────────────────────────────────────────────────
-            function appendFeedLine(text, cls = 'text-slate-300') {
-                const feed = document.getElementById('swarm-feed');
-                if (!feed) return;
-                const placeholder = feed.querySelector('.italic');
-                if (placeholder) placeholder.remove();
-                const div = document.createElement('div');
-                div.className = 'flex gap-2 py-0.5 border-l border-white/5 pl-2';
-                div.innerHTML = `<span class="text-slate-500 shrink-0">›</span> <span class="${cls} font-mono text-xs">${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`;
-                feed.appendChild(div);
-                feed.scrollTop = feed.scrollHeight;
-            }
-
-                // Renders pre-converted ANSI/HTML content directly (no escaping)
-                function appendFeedLineHtml(html, fallbackCls = 'text-slate-300') {
-                    const feed = document.getElementById('swarm-feed');
-                    if (!feed) return;
-                    const placeholder = feed.querySelector('.italic');
-                    if (placeholder) placeholder.remove();
-                    const div = document.createElement('div');
-                    div.className = 'flex gap-2 py-0.5 border-l border-white/5 pl-2';
-                    div.innerHTML = `<span class="text-slate-500 shrink-0">›</span> <span class="${fallbackCls} font-mono text-xs">${html}</span>`;
-                    feed.appendChild(div);
-                    feed.scrollTop = feed.scrollHeight;
-                }
-
-            function appendFeedBanner(text, cls = 'text-amber-400') {
-                const feed = document.getElementById('swarm-feed');
-                if (!feed) return;
+        // ── Feed helpers ──────────────────────────────────────────────────────
+        function appendFeedLine(text, cls = 'text-slate-300') {
+            const feed = document.getElementById('swarm-feed');
+            if (!feed) return;
             const placeholder = feed.querySelector('.italic');
             if (placeholder) placeholder.remove();
             const div = document.createElement('div');
-                    div.className = 'py-1 pl-2 border-l-2 border-amber-400 mt-2 mb-1';
-                    div.innerHTML = `<span class="${cls} font-bold text-sm">${text}</span>`;
-                    feed.appendChild(div);
-                    feed.scrollTop = feed.scrollHeight;
-                }
+            div.className = 'flex gap-2 py-0.5 border-l border-white/5 pl-2';
+            div.innerHTML = `<span class="text-slate-500 shrink-0">›</span> <span class="${cls} font-mono text-xs">${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`;
+            feed.appendChild(div);
+            feed.scrollTop = feed.scrollHeight;
+        }
 
-                // ── ANSI → HTML color converter ───────────────────────────────────────
-                const ANSI_COLORS = {
-                    '30': '#64748b', '31': '#f87171', '32': '#4ade80',
-                    '33': '#facc15', '34': '#60a5fa', '35': '#c084fc',
-                    '36': '#22d3ee', '37': '#e2e8f0', '90': '#475569',
-                    '91': '#f87171', '92': '#4ade80', '93': '#facc15',
-                    '94': '#60a5fa', '95': '#c084fc', '96': '#22d3ee', '97': '#f8fafc'
-                };
+        // Renders pre-converted ANSI/HTML content directly (no escaping)
+        function appendFeedLineHtml(html, fallbackCls = 'text-slate-300') {
+            const feed = document.getElementById('swarm-feed');
+            if (!feed) return;
+            const placeholder = feed.querySelector('.italic');
+            if (placeholder) placeholder.remove();
+            const div = document.createElement('div');
+            div.className = 'flex gap-2 py-0.5 border-l border-white/5 pl-2';
+            div.innerHTML = `<span class="text-slate-500 shrink-0">›</span> <span class="${fallbackCls} font-mono text-xs">${html}</span>`;
+            feed.appendChild(div);
+            feed.scrollTop = feed.scrollHeight;
+        }
 
-                function ansiToHtml(raw) {
-                    // Escape HTML first
-                    let s = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    // Convert ANSI color codes to <span> tags, strip bold/reset
-                    s = s.replace(/\x1b\[([0-9;]*)m/g, (_, codes) => {
-                        if (!codes || codes === '0') return '</span>';
-                        const parts = codes.split(';');
-                        const colors = parts.filter(c => ANSI_COLORS[c]);
-                        if (colors.length) return `<span style="color:${ANSI_COLORS[colors[colors.length - 1]]};font-weight:${parts.includes('1') ? 'bold' : 'normal'}">`;
-                        if (parts.includes('1')) return '<span style="font-weight:bold">';
-                        return '</span>';
+        function appendFeedBanner(text, cls = 'text-amber-400') {
+            const feed = document.getElementById('swarm-feed');
+            if (!feed) return;
+            const placeholder = feed.querySelector('.italic');
+            if (placeholder) placeholder.remove();
+            const div = document.createElement('div');
+            div.className = 'py-1 pl-2 border-l-2 border-amber-400 mt-2 mb-1';
+            div.innerHTML = `<span class="${cls} font-bold text-sm">${text}</span>`;
+            feed.appendChild(div);
+            feed.scrollTop = feed.scrollHeight;
+        }
+
+        // ── ANSI → HTML color converter ───────────────────────────────────────
+        const ANSI_COLORS = {
+            '30': '#64748b', '31': '#f87171', '32': '#4ade80',
+            '33': '#facc15', '34': '#60a5fa', '35': '#c084fc',
+            '36': '#22d3ee', '37': '#e2e8f0', '90': '#475569',
+            '91': '#f87171', '92': '#4ade80', '93': '#facc15',
+            '94': '#60a5fa', '95': '#c084fc', '96': '#22d3ee', '97': '#f8fafc'
+        };
+
+        function ansiToHtml(raw) {
+            // Escape HTML first
+            let s = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            // Convert ANSI color codes to <span> tags, strip bold/reset
+            s = s.replace(/\x1b\[([0-9;]*)m/g, (_, codes) => {
+                if (!codes || codes === '0') return '</span>';
+                const parts = codes.split(';');
+                const colors = parts.filter(c => ANSI_COLORS[c]);
+                if (colors.length) return `<span style="color:${ANSI_COLORS[colors[colors.length - 1]]};font-weight:${parts.includes('1') ? 'bold' : 'normal'}">`;
+                if (parts.includes('1')) return '<span style="font-weight:bold">';
+                return '</span>';
+            });
+            // Also handle ESC chars that come through as literal escape sequences in text
+            s = s.replace(/\[([0-9;]*)m/g, (_, codes) => {
+                if (!codes || codes === '0') return '';
+                const parts = codes.split(';');
+                const colors = parts.filter(c => ANSI_COLORS[c]);
+                if (colors.length) return `<span style="color:${ANSI_COLORS[colors[colors.length - 1]]}">`;
+                return '';
+            });
+            return s;
+        }
+
+        function stripAnsi(raw) {
+            // Strip all ANSI/escape sequences, return plain text
+            return raw.replace(/\x1b\[[0-9;]*m/g, '').replace(/\[[0-9;]*m/g, '').trim();
+        }
+
+        // ── Live log streamer via /api/logs offset ────────────────────────────
+        async function pollLogs() {
+            if (!AUTH_KEY) return;
+            try {
+                const r = await fetch(`/api/logs?offset=${logOffset}`, {
+                    headers: { 'X-Agentica-Auth': AUTH_KEY }
+                });
+                if (!r.ok) return;
+                const data = await r.json();
+                if (data.lines && data.lines.length > 0) {
+                    data.lines.forEach(raw => {
+                        const stripped = stripAnsi(raw);
+                        if (!stripped) return;
+                        const html = ansiToHtml(raw.trimEnd());
+
+                        if (stripped.startsWith('---')) {
+                            appendFeedBanner(stripped, 'text-amber-400');
+                        } else if (stripped.startsWith('[+]') || stripped.match(/complete|PASS|saved to/i)) {
+                            appendFeedLineHtml(html, 'text-green-400');
+                        } else if (stripped.startsWith('[!]') || stripped.match(/WARN|warning/i)) {
+                            appendFeedLineHtml(html, 'text-yellow-400');
+                        } else if (stripped.match(/\berror\b|FAIL|exception/i)) {
+                            appendFeedLineHtml(html, 'text-red-400');
+                        } else if (stripped.startsWith('[*]')) {
+                            appendFeedLineHtml(html, 'text-sky-400');
+                        } else {
+                            appendFeedLineHtml(html, 'text-slate-300');
+                        }
                     });
-                    // Also handle ESC chars that come through as literal escape sequences in text
-                    s = s.replace(/\[([0-9;]*)m/g, (_, codes) => {
-                        if (!codes || codes === '0') return '';
-                        const parts = codes.split(';');
-                        const colors = parts.filter(c => ANSI_COLORS[c]);
-                        if (colors.length) return `<span style="color:${ANSI_COLORS[colors[colors.length - 1]]}">`;
-                        return '';
-                    });
-                    return s;
                 }
-
-                function stripAnsi(raw) {
-                    // Strip all ANSI/escape sequences, return plain text
-                    return raw.replace(/\x1b\[[0-9;]*m/g, '').replace(/\[[0-9;]*m/g, '').trim();
-                }
-
-                // ── Live log streamer via /api/logs offset ────────────────────────────
-                async function pollLogs() {
-                    if (!AUTH_KEY) return;
-                    try {
-                        const r = await fetch(`/api/logs?offset=${logOffset}`, {
-                            headers: { 'X-Agentica-Auth': AUTH_KEY }
-                        });
-                        if (!r.ok) return;
-                        const data = await r.json();
-                        if (data.lines && data.lines.length > 0) {
-                            data.lines.forEach(raw => {
-                            const stripped = stripAnsi(raw);
-                            if (!stripped) return;
-                            const html = ansiToHtml(raw.trimEnd());
-
-                            if (stripped.startsWith('---')) {
-                                appendFeedBanner(stripped, 'text-amber-400');
-                            } else if (stripped.startsWith('[+]') || stripped.match(/complete|PASS|saved to/i)) {
-                                appendFeedLineHtml(html, 'text-green-400');
-                            } else if (stripped.startsWith('[!]') || stripped.match(/WARN|warning/i)) {
-                                appendFeedLineHtml(html, 'text-yellow-400');
-                            } else if (stripped.match(/\berror\b|FAIL|exception/i)) {
-                                appendFeedLineHtml(html, 'text-red-400');
-                            } else if (stripped.startsWith('[*]')) {
-                                appendFeedLineHtml(html, 'text-sky-400');
-                            } else {
-                                appendFeedLineHtml(html, 'text-slate-300');
-                            }
-                        });
-                    }
-                    logOffset = data.offset;
-                } catch (e) { /* silent */ }
-            }
+                logOffset = data.offset;
+            } catch (e) { /* silent */ }
+        }
 
 
-                function startStreaming(fromOffset) {
-                    logOffset = fromOffset || logOffset;
-                    if (isStreaming) return;
-                    isStreaming = true;
-                    clearInterval(streamTimer);
-                    streamTimer = setInterval(pollLogs, 1000);
-                    // Stop after 90s
-                    setTimeout(() => { clearInterval(streamTimer); isStreaming = false; }, 90000);
-                }
+        function startStreaming(fromOffset) {
+            logOffset = fromOffset || logOffset;
+            if (isStreaming) return;
+            isStreaming = true;
+            clearInterval(streamTimer);
+            streamTimer = setInterval(pollLogs, 1000);
+            // Stop after 90s
+            setTimeout(() => { clearInterval(streamTimer); isStreaming = false; }, 90000);
+        }
 
-            // ── Task runner ────────────────────────────────────────────────────────
+        // ── Task runner ────────────────────────────────────────────────────────
         async function runTask(task) {
             if (!AUTH_KEY) return;
 
@@ -377,7 +450,8 @@
                     appendFeedLine('✅ Process launched — live output streaming below:', 'text-green-400');
                     startStreaming(result.log_offset || 0);
                 } else {
-                    appendFeedLine(`❌ ${result.error || 'Unknown error'}`, 'text-red-400');
+                    const details = result.message ? `: ${result.message}` : '';
+                    appendFeedLine(`❌ ${result.error || 'Unknown error'}${details}`, 'text-red-400');
                 }
             } catch (err) {
                 appendFeedLine(`❌ Network error: ${err.message}`, 'text-red-400');
@@ -391,19 +465,19 @@
         // ══════════════════════════════════════════════════════════════════════
 
         const AGENT_COLORS = {
-            'backend-specialist':    { bg: 'bg-blue-500/10',   border: 'border-blue-500/30',   text: 'text-blue-400',   icon: '⚙️'  },
-            'security-auditor':     { bg: 'bg-red-500/10',    border: 'border-red-500/30',    text: 'text-red-400',    icon: '🔒'  },
-            'frontend-specialist':  { bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-400', icon: '🎨'  },
-            'database-architect':   { bg: 'bg-amber-500/10',  border: 'border-amber-500/30',  text: 'text-amber-400',  icon: '🗃️' },
-            'devops-engineer':      { bg: 'bg-green-500/10',  border: 'border-green-500/30',  text: 'text-green-400',  icon: '🚀'  },
-            'performance-optimizer':{ bg: 'bg-cyan-500/10',   border: 'border-cyan-500/30',   text: 'text-cyan-400',   icon: '⚡'  },
-            'test-engineer':        { bg: 'bg-pink-500/10',   border: 'border-pink-500/30',   text: 'text-pink-400',   icon: '🧪'  },
-            'SECRETARY BIRD':       { bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', text: 'text-yellow-400', icon: '🦅'  },
+            'backend-specialist': { bg: 'bg-blue-500/10', border: 'border-blue-500/30', text: 'text-blue-400', icon: '⚙️' },
+            'security-auditor': { bg: 'bg-red-500/10', border: 'border-red-500/30', text: 'text-red-400', icon: '🔒' },
+            'frontend-specialist': { bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-400', icon: '🎨' },
+            'database-architect': { bg: 'bg-amber-500/10', border: 'border-amber-500/30', text: 'text-amber-400', icon: '🗃️' },
+            'devops-engineer': { bg: 'bg-green-500/10', border: 'border-green-500/30', text: 'text-green-400', icon: '🚀' },
+            'performance-optimizer': { bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', text: 'text-cyan-400', icon: '⚡' },
+            'test-engineer': { bg: 'bg-pink-500/10', border: 'border-pink-500/30', text: 'text-pink-400', icon: '🧪' },
+            'SECRETARY BIRD': { bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', text: 'text-yellow-400', icon: '🦅' },
         };
 
         let debateOffset = 0;
         let debateStreamTimer = null;
-        let debateCheckTimer  = null;
+        let debateCheckTimer = null;
         let debateActive = false;
         let currentDebateTopic = '';
 
@@ -433,7 +507,7 @@
             const bar = document.getElementById('debate-agents-bar');
             if (!bar) return;
             bar.innerHTML = agents.map(a => {
-                const c = AGENT_COLORS[a] || { bg:'bg-slate-700', border:'border-slate-600', text:'text-slate-300', icon:'🤖' };
+                const c = AGENT_COLORS[a] || { bg: 'bg-slate-700', border: 'border-slate-600', text: 'text-slate-300', icon: '🤖' };
                 return `<span class="text-xs px-2 py-1 rounded-lg border ${c.bg} ${c.border} ${c.text} font-mono">${c.icon} ${a}</span>`;
             }).join('');
         }
@@ -444,7 +518,7 @@
 
             // Phase headers
             if (stripped.match(/\[Phase \d\]/)) {
-                return `<div class="text-center py-1"><span class="text-[10px] bg-white/5 px-3 py-0.5 rounded-full text-slate-400 uppercase tracking-widest">${stripped.replace(/[=*]+/g,'').trim()}</span></div>`;
+                return `<div class="text-center py-1"><span class="text-[10px] bg-white/5 px-3 py-0.5 rounded-full text-slate-400 uppercase tracking-widest">${stripped.replace(/[=*]+/g, '').trim()}</span></div>`;
             }
             if (stripped.match(/^={4,}/)) return null; // skip separator lines
 
@@ -453,8 +527,8 @@
             if (tagMatch) {
                 const phase = tagMatch[1];
                 const speaker = tagMatch[2].trim();
-                const c = AGENT_COLORS[speaker] || { bg:'bg-white/5', border:'border-white/10', text:'text-slate-300', icon:'🤖' };
-                const phaseLabel = { OPEN:'Opening', DEBATE:'Debate', PROP:'Proposal', VOTE:'Vote', CONSENSUS:'🏆 Consensus' }[phase] || phase;
+                const c = AGENT_COLORS[speaker] || { bg: 'bg-white/5', border: 'border-white/10', text: 'text-slate-300', icon: '🤖' };
+                const phaseLabel = { OPEN: 'Opening', DEBATE: 'Debate', PROP: 'Proposal', VOTE: 'Vote', CONSENSUS: '🏆 Consensus' }[phase] || phase;
                 return `<div class="rounded-lg border ${c.border} ${c.bg} p-2 mt-2">
                     <div class="flex items-center gap-2 mb-1">
                         <span class="text-[10px] ${c.text} font-bold uppercase">${c.icon} ${speaker}</span>
@@ -525,7 +599,7 @@
                 // Results panel
                 document.getElementById('debate-results')?.classList.remove('hidden');
                 const winner = s.winning_agent || '—';
-                const c = AGENT_COLORS[winner] || { icon:'🤖', text:'text-slate-300' };
+                const c = AGENT_COLORS[winner] || { icon: '🤖', text: 'text-slate-300' };
                 document.getElementById('debate-winner').innerHTML = `${c.icon} <span class="${c.text}">${winner}</span>`;
                 document.getElementById('debate-winning-proposal').innerText = s.winning_proposal || '—';
 
@@ -533,10 +607,10 @@
                 const votesEl = document.getElementById('debate-votes');
                 if (votesEl && s.vote_tally) {
                     votesEl.innerHTML = Object.entries(s.vote_tally)
-                        .sort((a,b) => b[1]-a[1])
+                        .sort((a, b) => b[1] - a[1])
                         .map(([agent, votes]) => {
-                            const ac = AGENT_COLORS[agent] || { text:'text-slate-400', bg:'bg-white/5', border:'border-white/10' };
-                            return `<span class="text-[10px] ${ac.text} ${ac.bg} border ${ac.border} px-2 py-1 rounded-lg">${agent}: ${votes} vote${votes!==1?'s':''}</span>`;
+                            const ac = AGENT_COLORS[agent] || { text: 'text-slate-400', bg: 'bg-white/5', border: 'border-white/10' };
+                            return `<span class="text-[10px] ${ac.text} ${ac.bg} border ${ac.border} px-2 py-1 rounded-lg">${agent}: ${votes} vote${votes !== 1 ? 's' : ''}</span>`;
                         }).join('');
                 }
 
@@ -551,7 +625,7 @@
             if (!AUTH_KEY) return;
             const topicInput = document.getElementById('debate-topic-input');
             const topic = topicInput?.value.trim() || 'Should Agenticana adopt voice-to-code?';
-            const agents = ['backend-specialist','security-auditor','frontend-specialist','devops-engineer'];
+            const agents = ['backend-specialist', 'security-auditor', 'frontend-specialist', 'devops-engineer'];
 
             // Reset UI
             const transcript = document.getElementById('debate-transcript');
@@ -564,7 +638,7 @@
             currentDebateTopic = topic;
 
             const btn = document.getElementById('btn-debate');
-            if (btn) { btn.disabled = true; btn.style.opacity = '0.55'; btn.textContent = '⏳ Debating...';}
+            if (btn) { btn.disabled = true; btn.style.opacity = '0.55'; btn.textContent = '⏳ Debating...'; }
 
             debateAppend(`<div class="text-amber-400 font-bold text-xs border-l-2 border-amber-400 pl-2 mb-3">⚡ Launching debate: "${topic}"</div>`);
 
@@ -580,7 +654,7 @@
                     clearInterval(debateStreamTimer);
                     clearInterval(debateCheckTimer);
                     debateStreamTimer = setInterval(debatePollLogs, 1000);
-                    debateCheckTimer  = setInterval(checkDebateComplete, 3000);
+                    debateCheckTimer = setInterval(checkDebateComplete, 3000);
                     // Auto timeout after 3 mins
                     setTimeout(() => { clearInterval(debateStreamTimer); clearInterval(debateCheckTimer); }, 180000);
                 } else {
@@ -595,7 +669,7 @@
             }
         }
 
-            // ── Button listeners ────────────────────────────────────────────────────
+        // ── Button listeners ────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('btn-intel')?.addEventListener('click', () => runTask('intel'));
             document.getElementById('btn-evolve')?.addEventListener('click', () => runTask('evolve'));
@@ -630,6 +704,21 @@
 
                 const st = document.getElementById('status-text');
                 if (st) st.innerText = "SYSTEM SYNCED";
+
+                // Billing / ROI
+                const billing = data.billing || {};
+                const planEl = document.getElementById('billing-plan');
+                if (planEl) planEl.innerText = (billing.plan || 'pro').toUpperCase();
+                const eventsEl = document.getElementById('billing-events');
+                if (eventsEl) eventsEl.innerText = billing.events_this_month ?? 0;
+                const revEl = document.getElementById('billing-revenue');
+                if (revEl) revEl.innerText = `$${(billing.estimated_revenue_usd ?? 0).toFixed(2)}`;
+                const costEl = document.getElementById('billing-cost');
+                if (costEl) costEl.innerText = `$${(billing.estimated_cost_usd ?? 0).toFixed(2)}`;
+                const marginEl = document.getElementById('billing-margin');
+                if (marginEl) marginEl.innerText = `${(billing.gross_margin_pct ?? 0).toFixed(2)}%`;
+                const profitEl = document.getElementById('billing-profit');
+                if (profitEl) profitEl.innerText = `Profit: $${(billing.estimated_profit_usd ?? 0).toFixed(2)}`;
 
                 // Update Intel
                 const intelGrid = document.getElementById('intel-grid');
@@ -687,4 +776,5 @@
         updateDashboard();
     </script>
 </body>
+
 </html>
