@@ -36,6 +36,18 @@ Desktop.ini
 memory/trajectories/
 memory/*.log
 
+# ── Agenticana FULL mode — project-local data ─────────────────────────────────
+# Trajectories grow large and are machine-specific — exclude them
+.Agenticana/memory/trajectories/
+# Decisions and router config are committed so the team shares learned patterns
+# .Agenticana/memory/reasoning-bank/decisions.json  ← intentionally committed
+# .Agenticana/router/config.json                    ← intentionally committed
+
+# ── Python test cache ─────────────────────────────────────────────────────────
+.pytest_cache/
+__pycache__/
+*.pyc
+
 # These contain shared team logic (optional to share)
 # memory/reasoning-bank/decisions.json
 # memory/reasoning-bank/patterns.json

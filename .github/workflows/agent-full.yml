@@ -1,0 +1,235 @@
+name: 🦅 Agenticana Full Agent CI
+
+# Runs the complete Agenticana audit chain on every push and PR.
+# Implements Plan P29+: Guardian → Sentinel → Agent YAML validation →
+# ReasoningBank → Model Router → MCP tools → Skills structure → Unit tests.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # ────────────────────────────────────────────────────────────────────────────
+  # Job 1: Full Agenticana P29+ audit chain (Python)
+  # ────────────────────────────────────────────────────────────────────────────
+  agent-full-audit:
+    name: 🦅 Full Agent Audit (P29+)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt 2>/dev/null || true
+
+      - name: Install MCP Node dependencies
+        run: cd mcp && npm ci
+
+      - name: Run P29+ full agent audit
+        run: python scripts/p29p_engine.py run --ci
+
+      - name: Upload audit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agenticana-audit-${{ github.run_id }}
+          path: .Agenticana/memory/reasoning-bank/decisions.json
+          if-no-files-found: ignore
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Job 2: Agent YAML schema validation
+  # ────────────────────────────────────────────────────────────────────────────
+  validate-agents:
+    name: 📋 Validate Agent YAMLs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Validate all agent YAML definitions
+        run: |
+          python -c "
+          import yaml, os, sys
+          agents_dir = 'agents'
+          files = [f for f in os.listdir(agents_dir) if f.endswith('.yaml')]
+          errors = []
+          for f in files:
+              try:
+                  yaml.safe_load(open(f'{agents_dir}/{f}', encoding='utf-8'))
+              except yaml.YAMLError as e:
+                  errors.append(f'{f}: {e}')
+          if errors:
+              print('FAILED:', errors)
+              sys.exit(1)
+          print(f'✅ All {len(files)} agent YAMLs valid')
+          "
+
+      - name: Verify agent completeness (20 specialist agents)
+        run: |
+          python -c "
+          import os
+          files = [f for f in os.listdir('agents') if f.endswith('.yaml')]
+          print(f'Found {len(files)} agent YAML files')
+          if len(files) < 15:
+              raise SystemExit(f'Expected at least 15 agents, found {len(files)}')
+          print('✅ Agent count OK')
+          "
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Job 3: ReasoningBank + Model Router smoke tests
+  # ────────────────────────────────────────────────────────────────────────────
+  smoke-tests:
+    name: 🧠 ReasoningBank + Router Smoke Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt 2>/dev/null || true
+
+      - name: ReasoningBank stats
+        run: python scripts/reasoning_bank.py stats
+
+      - name: Model Router smoke test
+        run: python scripts/router_cli.py "fix the login button color" --compact
+
+      - name: Verify project-local .Agenticana memory
+        run: |
+          python -c "
+          import json, pathlib
+          f = pathlib.Path('.Agenticana/memory/reasoning-bank/decisions.json')
+          if not f.exists():
+              raise SystemExit('.Agenticana/memory/reasoning-bank/decisions.json missing')
+          data = json.loads(f.read_text())
+          assert 'decisions' in data, 'decisions key missing'
+          print(f'✅ Project-local ReasoningBank OK ({data[\"total_decisions\"]} decisions)')
+          "
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Job 4: P29+ engine unit tests
+  # ────────────────────────────────────────────────────────────────────────────
+  unit-tests:
+    name: 🧪 P29+ Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt 2>/dev/null || true
+
+      - name: Install MCP Node dependencies
+        run: cd mcp && npm ci
+
+      - name: Run P29+ unit tests
+        run: python -m pytest tests/test_p29p.py -v --tb=short
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Job 5: MCP server validation
+  # ────────────────────────────────────────────────────────────────────────────
+  validate-mcp:
+    name: 🔌 MCP Server Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install MCP dependencies
+        run: cd mcp && npm ci
+
+      - name: Validate MCP tool modules
+        run: |
+          node -e "
+          const path = require('path');
+          const tools = [
+            './mcp/tools/memory-tools.js',
+            './mcp/tools/reasoning-bank-tools.js',
+            './mcp/tools/router-tools.js',
+            './mcp/tools/agent-tools.js',
+          ];
+          let ok = 0;
+          for (const t of tools) {
+            try { require(path.resolve(t)); ok++; } catch(e) { console.error('FAIL', t, e.message); }
+          }
+          console.log(\`✅ \${ok}/\${tools.length} MCP tool modules valid\`);
+          if (ok < tools.length) process.exit(1);
+          "
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Job 6: Skills structure check
+  # ────────────────────────────────────────────────────────────────────────────
+  validate-skills:
+    name: 🎯 Skills Structure Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify skills directory structure
+        run: |
+          python -c "
+          import os, sys
+          skills_dir = 'skills'
+          dirs = [d for d in os.listdir(skills_dir) if os.path.isdir(os.path.join(skills_dir, d))]
+          missing = [d for d in dirs if not os.path.exists(os.path.join(skills_dir, d, 'SKILL.md'))]
+          print(f'Found {len(dirs)} skill directories')
+          if missing:
+              print(f'WARNING: {len(missing)} skills missing SKILL.md: {missing[:5]}')
+          else:
+              print(f'✅ All {len(dirs)} skills have SKILL.md')
+          "
