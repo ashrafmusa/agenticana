@@ -1,12 +1,14 @@
-{
-  "servers": {
-    "Agenticana": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["${workspaceFolder}/mcp/server.js"],
-      "env": {
-        "Agenticana_ROOT": "${workspaceFolder}"
-      }
-    }
-  }
+﻿{
+    "servers":  {
+                    "Agenticana":  {
+                                       "args":  [
+                                                    "D:/_Projects/Agentica/mcp/server.js"
+                                                ],
+                                       "env":  {
+                                                   "Agenticana_ROOT":  "D:/_Projects/Agentica"
+                                               },
+                                       "command":  "node",
+                                       "type":  "stdio"
+                                   }
+                }
 }

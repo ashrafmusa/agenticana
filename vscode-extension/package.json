@@ -1,0 +1,136 @@
+{
+  "name": "agenticana",
+  "displayName": "Agenticana 🦅",
+  "description": "Sovereign AI Developer OS sidebar — Guardian status, NL Swarm, ReasoningBank, attestations.",
+  "version": "1.0.0",
+  "publisher": "agenticana",
+  "icon": "media/logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ashrafmusa/AGENTICANA"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["AI", "Other"],
+  "keywords": ["ai", "agents", "copilot", "guardian", "swarm", "mcp"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "agenticana-sidebar",
+          "title": "Agenticana 🦅",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "agenticana-sidebar": [
+        {
+          "type": "webview",
+          "id": "agenticana.sidebarView",
+          "name": "Agenticana Control",
+          "icon": "media/icon.svg",
+          "contextualTitle": "Agenticana"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "agenticana.openSidebar",
+        "title": "Agenticana: Open Sidebar",
+        "icon": "$(robot)"
+      },
+      {
+        "command": "agenticana.runNLSwarm",
+        "title": "Agenticana: Run NL Swarm",
+        "icon": "$(play)"
+      },
+      {
+        "command": "agenticana.guardianStatus",
+        "title": "Agenticana: Check Guardian Status",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "agenticana.sovereignScan",
+        "title": "Agenticana: Scan Competitors (Sovereign Intel)",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "agenticana.sovereignEvolve",
+        "title": "Agenticana: Self-Evolve (Sovereign Loop)",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "agenticana.openDashboard",
+        "title": "Agenticana: Open Web Dashboard",
+        "icon": "$(browser)"
+      },
+      {
+        "command": "agenticana.powSign",
+        "title": "Agenticana: Sign Commit (Proof-of-Work)",
+        "icon": "$(verified)"
+      },
+      {
+        "command": "agenticana.refresh",
+        "title": "Agenticana: Refresh Sidebar",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "agenticana.refresh",
+          "when": "view == agenticana.sidebarView",
+          "group": "navigation"
+        },
+        {
+          "command": "agenticana.openDashboard",
+          "when": "view == agenticana.sidebarView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Agenticana",
+      "properties": {
+        "agenticana.projectRoot": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to the Agenticana project root (leave empty to auto-detect from workspace)"
+        },
+        "agenticana.pythonPath": {
+          "type": "string",
+          "default": "python",
+          "description": "Path to Python executable (e.g. python3 or full path)"
+        },
+        "agenticana.dashboardPort": {
+          "type": "number",
+          "default": 8080,
+          "description": "Port for the Agenticana Flask dashboard"
+        },
+        "agenticana.githubToken": {
+          "type": "string",
+          "default": "",
+          "description": "GitHub personal access token for Sovereign Intel (P25)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0",
+    "@vscode/vsce": "^2.24.0"
+  }
+}

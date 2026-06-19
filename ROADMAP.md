@@ -41,40 +41,51 @@ This is the living roadmap for Agenticana. Items marked **open** are available f
 | P29+  | GitHub Actions CI Agent (Enhanced)                   | ✅ Auto-Evolved 2026-03-06 |
 | P28+  | Local-First Vector Storage (Enhanced)                | ✅ Auto-Evolved 2026-03-06 |
 | P22   | Sovereign Dashboard — Flask API + live log streaming | ✅ Shipped v7.0            |
+| P23   | VS Code Sidebar Extension — Guardian, NL Swarm, PoW  | ✅ Shipped v8.0            |
+| P24   | Guardian Rule DSL — custom YAML pre-commit policies  | ✅ Shipped v8.0            |
+| P25   | Sovereign Loop — real GitHub intel + auto-evolve     | ✅ Shipped v8.0            |
 
 ---
 
+
+| P30+ | Agent Performance Leaderboard (Enhanced) | ✅ Auto-Evolved 2026-05-10 |
+
+
+| P26+ | Voice-to-Code Bridge (Enhanced) | ✅ Auto-Evolved 2026-05-10 |
+
+
+| P27+ | Cross-LLM Debate Voting (Enhanced) | ✅ Auto-Evolved 2026-05-10 |
+
+
+| P28+ | Local-First Vector Storage (Enhanced) | ✅ Auto-Evolved 2026-05-10 |
+
+
+| P29+ | GitHub Actions CI Agent (Enhanced) | ✅ Auto-Evolved 2026-05-10 |
+
+
+| P26+ | Voice-to-Code Bridge (Enhanced) | ✅ Auto-Evolved 2026-06-19 |
+
 ## 🔜 Next Phases (Open for Contributors)
 
-### P23: VS Code Extension
+### P26: Voice-to-Code Bridge (Real)
 
-**Status:** 🟡 Idea
-**Idea:** Native VS Code sidebar showing current Guardian status, recent attestations, quick-launch for NL Swarm, and ReasoningBank search.
-**Good for:** VS Code extension developer (TypeScript)
-
-### P23: VS Code Extension
-
-**Status:** 🟡 Idea
-**Idea:** Native VS Code sidebar showing current Guardian status, recent attestations, quick-launch for NL Swarm, and ReasoningBank search.
-**Good for:** VS Code extension developer (TypeScript)
+**Status:** 🟡 Open
+**Idea:** Wire the existing `nl_swarm.py` to a microphone input via `speechrecognition` or `whisper.cpp`. Speak your task → instant agent dispatch.
+**Good for:** Python developer with audio/ML interest
 [Start a Discussion →](https://github.com/ashrafmusa/agenticana/discussions/new)
 
-### P24: Guardian Rule DSL
+### P27: Agenticana Plugin Marketplace
 
 **Status:** 🟡 Idea
-**Idea:** Let teams define custom pre-commit rules in a simple YAML format. E.g., "never commit without tests," "always sign with PoW if files > 5 changed."
-**Good for:** Python developer interested in DSL design
+**Idea:** Extend the Agent Exchange so community members can publish, version, and install custom agents via a registry (like npm for agents).
+**Good for:** Fullstack developer
 [Start a Discussion →](https://github.com/ashrafmusa/agenticana/discussions/new)
 
-### P25: The Sovereign Loop (Aggressive Autonomy)
+### P28: Agenticana-as-a-Service (Hosted)
 
-**Status:** 🚀 **PROPOSAL**
-**Mechanism:**
+**Status:** 🚀 Future
+**Idea:** Cloud-hosted Agenticana instance so teams without local Python/Node setup can still use the Swarm, Guardian, and Sovereign Loop via a web UI.
 
-1. **Intel Swarm**: Monitor competitor repos (e.g., `openclaw/openclaw`) for trending feature requests.
-2. **Self-Development**: Use NL Swarm to auto-implement missing features.
-3. **Auto-Merge**: Enable `auto-merge` if Shadow Sandbox + Guardian marks the PR as **CERTIFIED (Trust Score > 90)**.
-   **Goal:** A repo that evolves faster than its competitors by self-monitoring and self-patching.
 
 ---
 

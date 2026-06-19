@@ -6,6 +6,397 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [P26+] 2026-06-19 — Voice-to-Code Bridge (Enhanced)
+
+### Added
+- **Voice-to-Code Bridge (Enhanced)**: Allow users to describe code changes in spoken/written natural language. The system transcribes and pipes input directly to NL Swarm for agent dispatch.
+- Plan document: `plans/p26_voice_to_code.md`
+- Triggered by market gap analysis: *"Linux/Windows Clawdbot Apps"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P26+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [8.0.0] — 2026-06-19 🦅 Sovereign Edition
+
+### Three New Phases Shipped: P23 · P24 · P25
+
+> *"The Secretary Bird doesn't wait for permission. It stomps, records, and ships."*
+
+#### Added — P23: VS Code Sidebar Extension
+
+- `vscode-extension/` — Full TypeScript VS Code extension (compile with `npm run compile`, press F5 to run)
+- Activity bar icon with 🦅 Agenticana sidebar
+- **Guardian Status** badge — live indicator of pre-commit hook state
+- **NL Swarm** inline input — type plain English, dispatch swarm from the sidebar
+- **Trust Score** bar — visual progress indicator from latest PoW attestation
+- **Sovereign Loop** controls — one-click competitor scan + self-evolve buttons
+- **Guardian Audit Log** — last 3 pre-commit results inline
+- **Quick Actions** — Pulse, Sentinel, Dashboard, ReasoningBank, Simulacrum
+- State loaded directly from `.Agentica/` JSON files — no server needed for display
+- Commands launch integrated VS Code terminals for real script execution
+
+#### Added — P24: Guardian Rule DSL
+
+- `scripts/guardian_rules_engine.py` — YAML rule evaluator with 5 rule types:
+  - `forbid_pattern` — regex must NOT appear in staged files
+  - `require_pattern` — regex MUST appear in matching files
+  - `require_tests` — each changed module needs a paired test file
+  - `min_files_for_pow` — N+ file changes require a PoW attestation < 24h old
+  - `max_file_size_kb` — blocks files over a size limit
+- `.Agentica/guardian_rules.yaml` — starter template with 3 sample rules
+- `guardian_mode.py` extended — **4th check** `[4/4] Custom YAML rules` added to pre-commit hook
+- `agentica guardian-rules init / validate / list` — new CLI subcommand
+- Severity model: `warn` (allow commit) vs `block` (hard reject)
+- Graceful fallback: missing YAML file → check skipped (non-breaking install)
+
+#### Added — P25: Sovereign Loop (Real)
+
+- `scripts/sovereign_intel.py` — **Real GitHub Issues API** (replaces mock):
+  - Fetches top open enhancement/feature-request issues from 11+ competitor repos
+  - Unauthenticated (60 req/hr) with optional `GITHUB_TOKEN` for 5000 req/hr
+  - Extracts top gap keywords by comment-count weighting
+- `scripts/sovereign_loop.py` — **Full 5-step pipeline orchestrator**:
+  1. Intel scan → competitor gaps
+  2. Evolution engine → plan file + docs update
+  3. NL Swarm → manifest generation
+  4. PoW sign → trust attestation
+  5. Git push → optional, gated by minimum trust score (default: 70)
+  - Flags: `--dry-run`, `--no-push`, `--phase`, `--token`, `--min-trust`, `--status`
+- `.github/workflows/sovereign-loop.yml` — **Real GitHub Actions workflow**:
+  - Scheduled weekly (Mondays 08:00 UTC) + manual trigger
+  - Full 5-step pipeline in CI
+  - Trust score gate — push only if score ≥ configured minimum
+  - Auto-merge job for `sovereign-evolution` labeled PRs (trust ≥ 90)
+- `agentica sovereign scan / evolve / status` — new CLI subcommand
+
+#### Changed
+
+- `scripts/agentica_cli.py` — 2 new subcommands: `guardian-rules`, `sovereign`
+- `ROADMAP.md` — P23/P24/P25 moved to ✅ Completed, new next phases P26–P28
+- `README.md` — new sections for all three phases
+
+---
+
+## [P30+] 2026-05-10 — Agent Performance Leaderboard (Enhanced)
+
+### Added
+- **Agent Performance Leaderboard (Enhanced)**: Track which agents win the most Simulacrum debates, which proposals get accepted, and surface a ranked leaderboard on the dashboard.
+- Plan document: `plans/p30_leaderboard.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P30+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P29+] 2026-05-10 — GitHub Actions CI Agent (Enhanced)
+
+### Added
+- **GitHub Actions CI Agent (Enhanced)**: A GitHub Actions workflow that runs the full Agenticana audit chain (Guardian → Sentinel → tests → Lighthouse) on every PR automatically.
+- Plan document: `plans/p29_github_actions_agent.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P29+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P28+] 2026-05-10 — Local-First Vector Storage (Enhanced)
+
+### Added
+- **Local-First Vector Storage (Enhanced)**: Replace in-memory vector store with a persistent local Qdrant/ChromaDB instance. Enables persistent agent memory across restarts without cloud dependency.
+- Plan document: `plans/p28_local_vector_store.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P28+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P27+] 2026-05-10 — Cross-LLM Debate Voting (Enhanced)
+
+### Added
+- **Cross-LLM Debate Voting (Enhanced)**: Extended Simulacrum that uses multiple LLM providers (Gemini, OpenAI, Anthropic) as different agent 'brains' to produce genuinely diverse opinions.
+- Plan document: `plans/p27_cross_llm_debate.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P27+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P26+] 2026-05-10 — Voice-to-Code Bridge (Enhanced)
+
+### Added
+- **Voice-to-Code Bridge (Enhanced)**: Allow users to describe code changes in spoken/written natural language. The system transcribes and pipes input directly to NL Swarm for agent dispatch.
+- Plan document: `plans/p26_voice_to_code.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P26+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P30+] 2026-05-10 — Agent Performance Leaderboard (Enhanced)
+
+### Added
+- **Agent Performance Leaderboard (Enhanced)**: Track which agents win the most Simulacrum debates, which proposals get accepted, and surface a ranked leaderboard on the dashboard.
+- Plan document: `plans/p30_leaderboard.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P30+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P29+] 2026-05-10 — GitHub Actions CI Agent (Enhanced)
+
+### Added
+- **GitHub Actions CI Agent (Enhanced)**: A GitHub Actions workflow that runs the full Agenticana audit chain (Guardian → Sentinel → tests → Lighthouse) on every PR automatically.
+- Plan document: `plans/p29_github_actions_agent.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P29+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P28+] 2026-05-10 — Local-First Vector Storage (Enhanced)
+
+### Added
+- **Local-First Vector Storage (Enhanced)**: Replace in-memory vector store with a persistent local Qdrant/ChromaDB instance. Enables persistent agent memory across restarts without cloud dependency.
+- Plan document: `plans/p28_local_vector_store.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P28+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P27+] 2026-05-10 — Cross-LLM Debate Voting (Enhanced)
+
+### Added
+- **Cross-LLM Debate Voting (Enhanced)**: Extended Simulacrum that uses multiple LLM providers (Gemini, OpenAI, Anthropic) as different agent 'brains' to produce genuinely diverse opinions.
+- Plan document: `plans/p27_cross_llm_debate.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P27+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P26+] 2026-05-10 — Voice-to-Code Bridge (Enhanced)
+
+### Added
+- **Voice-to-Code Bridge (Enhanced)**: Allow users to describe code changes in spoken/written natural language. The system transcribes and pipes input directly to NL Swarm for agent dispatch.
+- Plan document: `plans/p26_voice_to_code.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P26+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P30+] 2026-05-10 — Agent Performance Leaderboard (Enhanced)
+
+### Added
+- **Agent Performance Leaderboard (Enhanced)**: Track which agents win the most Simulacrum debates, which proposals get accepted, and surface a ranked leaderboard on the dashboard.
+- Plan document: `plans/p30_leaderboard.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P30+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P29+] 2026-05-10 — GitHub Actions CI Agent (Enhanced)
+
+### Added
+- **GitHub Actions CI Agent (Enhanced)**: A GitHub Actions workflow that runs the full Agenticana audit chain (Guardian → Sentinel → tests → Lighthouse) on every PR automatically.
+- Plan document: `plans/p29_github_actions_agent.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P29+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P28+] 2026-05-10 — Local-First Vector Storage (Enhanced)
+
+### Added
+- **Local-First Vector Storage (Enhanced)**: Replace in-memory vector store with a persistent local Qdrant/ChromaDB instance. Enables persistent agent memory across restarts without cloud dependency.
+- Plan document: `plans/p28_local_vector_store.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P28+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P27+] 2026-05-10 — Cross-LLM Debate Voting (Enhanced)
+
+### Added
+- **Cross-LLM Debate Voting (Enhanced)**: Extended Simulacrum that uses multiple LLM providers (Gemini, OpenAI, Anthropic) as different agent 'brains' to produce genuinely diverse opinions.
+- Plan document: `plans/p27_cross_llm_debate.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P27+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P26+] 2026-05-10 — Voice-to-Code Bridge (Enhanced)
+
+### Added
+- **Voice-to-Code Bridge (Enhanced)**: Allow users to describe code changes in spoken/written natural language. The system transcribes and pipes input directly to NL Swarm for agent dispatch.
+- Plan document: `plans/p26_voice_to_code.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P26+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P30+] 2026-05-10 — Agent Performance Leaderboard (Enhanced)
+
+### Added
+- **Agent Performance Leaderboard (Enhanced)**: Track which agents win the most Simulacrum debates, which proposals get accepted, and surface a ranked leaderboard on the dashboard.
+- Plan document: `plans/p30_leaderboard.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P30+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P29+] 2026-05-10 — GitHub Actions CI Agent (Enhanced)
+
+### Added
+- **GitHub Actions CI Agent (Enhanced)**: A GitHub Actions workflow that runs the full Agenticana audit chain (Guardian → Sentinel → tests → Lighthouse) on every PR automatically.
+- Plan document: `plans/p29_github_actions_agent.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P29+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P28+] 2026-05-10 — Local-First Vector Storage (Enhanced)
+
+### Added
+- **Local-First Vector Storage (Enhanced)**: Replace in-memory vector store with a persistent local Qdrant/ChromaDB instance. Enables persistent agent memory across restarts without cloud dependency.
+- Plan document: `plans/p28_local_vector_store.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P28+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P27+] 2026-05-10 — Cross-LLM Debate Voting (Enhanced)
+
+### Added
+- **Cross-LLM Debate Voting (Enhanced)**: Extended Simulacrum that uses multiple LLM providers (Gemini, OpenAI, Anthropic) as different agent 'brains' to produce genuinely diverse opinions.
+- Plan document: `plans/p27_cross_llm_debate.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P27+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P26+] 2026-05-10 — Voice-to-Code Bridge (Enhanced)
+
+### Added
+- **Voice-to-Code Bridge (Enhanced)**: Allow users to describe code changes in spoken/written natural language. The system transcribes and pipes input directly to NL Swarm for agent dispatch.
+- Plan document: `plans/p26_voice_to_code.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P26+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
+## [P30+] 2026-05-10 — Agent Performance Leaderboard (Enhanced)
+
+### Added
+- **Agent Performance Leaderboard (Enhanced)**: Track which agents win the most Simulacrum debates, which proposals get accepted, and surface a ranked leaderboard on the dashboard.
+- Plan document: `plans/p30_leaderboard.md`
+- Triggered by market gap analysis: *"Voice-to-code integration"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P30+ as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
 ## [P29+] 2026-03-06 — GitHub Actions CI Agent (Enhanced)
 
 ### Added

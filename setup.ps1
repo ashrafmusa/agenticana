@@ -1,4 +1,4 @@
-# Agenticana v2 Setup Script for Windows
+﻿# Agenticana v2 Setup Script for Windows
 # Run this once to install all dependencies
 # Usage: Right-click → "Run with PowerShell" OR: powershell -ExecutionPolicy Bypass -File setup.ps1
 
@@ -16,7 +16,8 @@ Write-Host "[1/5] Checking Node.js..." -ForegroundColor Yellow
 try {
     $nodeVersion = node --version 2>&1
     Write-Host "  ✅ Node.js found: $nodeVersion" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "  ❌ Node.js not found. Please install from https://nodejs.org (v20+)" -ForegroundColor Red
     Write-Host "     After installing, re-run this script." -ForegroundColor Red
     exit 1
@@ -27,7 +28,8 @@ Write-Host "[2/5] Checking Python..." -ForegroundColor Yellow
 try {
     $pythonVersion = python --version 2>&1
     Write-Host "  ✅ Python found: $pythonVersion" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "  ❌ Python not found. Please install from https://python.org (3.11+)" -ForegroundColor Red
     exit 1
 }
@@ -40,7 +42,8 @@ if (Test-Path $mcpDir) {
     npm install --silent
     Pop-Location
     Write-Host "  ✅ MCP dependencies installed" -ForegroundColor Green
-} else {
+}
+else {
     Write-Host "  ⚠️  mcp/ directory not found — skipping" -ForegroundColor DarkYellow
 }
 
@@ -50,12 +53,14 @@ $requirementsFile = Join-Path $AgenticanaRoot "requirements.txt"
 if (Test-Path $requirementsFile) {
     python -m pip install -r $requirementsFile --quiet
     Write-Host "  ✅ Python dependencies installed" -ForegroundColor Green
-} else {
+}
+else {
     # Install just the core dep
     python -m pip install sentence-transformers --quiet 2>$null
     if ($LASTEXITCODE -eq 0) {
         Write-Host "  ✅ sentence-transformers installed (enables ML embeddings)" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "  ℹ️  sentence-transformers not installed — fallback TF embeddings will be used" -ForegroundColor DarkYellow
         Write-Host "     To install later: pip install sentence-transformers" -ForegroundColor DarkGray
     }

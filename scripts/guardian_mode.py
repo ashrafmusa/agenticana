@@ -49,13 +49,13 @@ root = Path(__file__).parent.parent
 results = {"timestamp": datetime.now().isoformat(), "checks": [], "blocked": False}
 
 # Check 1: Sentinel (advisory only - never blocks)
-print(f"  [1/3] Running Sentinel audit...", end=" ", flush=True)
+print(f"  [1/4] Running Sentinel audit...", end=" ", flush=True)
 r = run(f"python {root / 'scripts' / 'sentinel.py'}")
 results["checks"].append({"name": "sentinel", "passed": True, "output": r.stdout[-300:] if r.stdout else r.stderr[-200:]})
 print(f"{YELLOW}WARN{RESET} (advisory)" if r.returncode != 0 else f"{GREEN}PASS{RESET}")
 
 # Check 2: Quick lint
-print(f"  [2/3] Running lint check...", end=" ", flush=True)
+print(f"  [2/4] Running lint check...", end=" ", flush=True)
 staged = run("git diff --cached --name-only --diff-filter=ACM").stdout.strip().splitlines()
 py_files = [f for f in staged if f.endswith(".py")]
 lint_ok = True
@@ -72,7 +72,7 @@ if not lint_ok:
     print(f"    {RED}{lint_out}{RESET}")
 
 # Check 3: Smart secret scan
-print(f"  [3/3] Scanning for secrets...", end=" ", flush=True)
+print(f"  [3/4] Scanning for secrets...", end=" ", flush=True)
 secret_found = False
 secret_note = ""
 danger_vars = ["api_key", "secret_key", "password", "aws_secret", "private_key"]
@@ -98,6 +98,26 @@ for f in staged:
         pass
 results["checks"].append({"name": "secret_scan", "passed": not secret_found, "output": secret_note or "Clean"})
 print(f"{GREEN}PASS{RESET}" if not secret_found else f"{YELLOW}WARN -- {secret_note}{RESET}")
+
+# Check 4: Custom YAML rules (P24)
+print(f"  [4/4] Evaluating custom rules (P24)...", end=" ", flush=True)
+rules_engine = root / "scripts" / "guardian_rules_engine.py"
+if rules_engine.exists():
+    r4 = run(f"python {rules_engine} validate")
+    rules_passed = r4.returncode == 0
+    rules_out = (r4.stdout + r4.stderr).strip()[-300:] or "No custom rules file."
+    # If no rules file at all, treat as passed (advisory only)
+    if "No rules file found" in rules_out or "No rules loaded" in rules_out:
+        rules_passed = True
+    results["checks"].append({"name": "custom_rules", "passed": rules_passed, "output": rules_out})
+    print(f"{GREEN}PASS{RESET}" if rules_passed else f"{RED}FAIL{RESET}")
+    if not rules_passed:
+        for line in rules_out.splitlines():
+            if "BLOCK" in line or "WARN" in line:
+                print(f"    {line}")
+else:
+    results["checks"].append({"name": "custom_rules", "passed": True, "output": "Engine not found — skipped"})
+    print(f"{YELLOW}SKIP{RESET} (guardian_rules_engine.py not found)")
 
 # Result
 all_passed = all(c["passed"] for c in results["checks"])
@@ -184,3 +204,4 @@ if __name__ == "__main__":
                         help="Guardian action")
     args = parser.parse_args()
     {"install": install, "remove": remove, "audit": audit, "status": status}[args.action]()
+

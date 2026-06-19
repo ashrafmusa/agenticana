@@ -105,7 +105,33 @@ def cmd_exchange(args):
     return _run(["python", str(SCRIPTS / "exchange.py")] + flags)
 
 
-# ── Parser Setup ──────────────────────────────────────────────────
+def cmd_guardian_rules(args):
+    """Manage P24 custom Guardian YAML rules."""
+    return _run(["python", str(SCRIPTS / "guardian_rules_engine.py"), args.action])
+
+
+def cmd_sovereign(args):
+    """Run P25 Sovereign Loop operations."""
+    if args.action == "scan":
+        cmd = ["python", str(SCRIPTS / "sovereign_intel.py")]
+        if args.token:
+            cmd += ["--token", args.token]
+        return _run(cmd)
+    elif args.action == "evolve":
+        cmd = ["python", str(SCRIPTS / "sovereign_loop.py")]
+        if args.dry_run:
+            cmd.append("--dry-run")
+        if args.no_push:
+            cmd.append("--no-push")
+        if args.token:
+            cmd += ["--token", args.token]
+        return _run(cmd)
+    elif args.action == "status":
+        return _run(["python", str(SCRIPTS / "sovereign_loop.py"), "--status"])
+    return 0
+
+
+# ── Parser Setup ──────────────────────────────────────────────────────────────────────
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
@@ -114,15 +140,17 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=f"""
 Commands:
-  swarm       Dispatch a swarm manifest (parallel agents)
-  sentinel    Run the self-healing sentinel
-  dashboard   Start the Control Center dashboard
-  bridge      Sync Soul Memory across projects
-  simulacrum  Run an Agent-to-Agent debate
-  pulse       Run performance benchmarks
-  sandbox     Manage the shadow sandbox
-  heartbeat   Control the background heartbeat daemon
-  exchange    Manage the agent exchange marketplace
+  swarm           Dispatch a swarm manifest (parallel agents)
+  sentinel        Run the self-healing sentinel
+  dashboard       Start the Control Center dashboard
+  bridge          Sync Soul Memory across projects
+  simulacrum      Run an Agent-to-Agent debate
+  pulse           Run performance benchmarks
+  sandbox         Manage the shadow sandbox
+  heartbeat       Control the background heartbeat daemon
+  exchange        Manage the agent exchange marketplace
+  guardian-rules  Manage P24 custom pre-commit YAML rules      [P24]
+  sovereign       Run the P25 Sovereign Loop (intel/evolve)    [P25]
 
 Examples:
   agentica swarm .Agentica/swarm_manifest.json --shadow
@@ -130,6 +158,10 @@ Examples:
   agentica pulse
   agentica dashboard --port 8080
   agentica exchange install react-expert
+  agentica guardian-rules init
+  agentica guardian-rules validate
+  agentica sovereign scan
+  agentica sovereign evolve --dry-run
         """
     )
     p.add_argument("--version", action="version", version=f"Agentica {VERSION}")
@@ -187,6 +219,25 @@ Examples:
     sp.add_argument("agent", nargs="?", help="Agent name (for install)")
     sp.add_argument("--force", action="store_true", help="Force overwrite on install")
     sp.set_defaults(func=cmd_exchange)
+
+    # guardian-rules (P24)
+    sp = sub.add_parser("guardian-rules", help="Manage custom P24 Guardian YAML rules")
+    sp.add_argument("action", choices=["validate", "init", "list"],
+                    default="validate", nargs="?",
+                    help="validate (default): check staged files | init: create starter YAML | list: show active rules")
+    sp.set_defaults(func=cmd_guardian_rules)
+
+    # sovereign (P25)
+    sp = sub.add_parser("sovereign", help="P25 Sovereign Loop — competitor intel & auto-evolution")
+    sp.add_argument("action", choices=["scan", "evolve", "status"],
+                    help="scan: fetch competitor intel | evolve: run full loop | status: show last cycle")
+    sp.add_argument("--dry-run",  dest="dry_run",  action="store_true",
+                    help="(evolve) Show what would happen without writing files")
+    sp.add_argument("--no-push",  dest="no_push",  action="store_true",
+                    help="(evolve) Commit but do not push to GitHub")
+    sp.add_argument("--token",    default=None,
+                    help="GitHub personal access token (or set GITHUB_TOKEN env var)")
+    sp.set_defaults(func=cmd_sovereign)
 
     return p
 

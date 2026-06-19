@@ -1,31 +1,166 @@
-name: 🦅 Sovereign Loop Auto-Merge
+name: 🦅 Sovereign Loop — Auto-Evolve & Merge
 
 on:
+  # Scheduled: run every Monday at 08:00 UTC
+  schedule:
+    - cron: "0 8 * * 1"
+  # Manual trigger from GitHub Actions UI
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run in dry-run mode (no actual changes)"
+        required: false
+        default: "false"
+      min_trust:
+        description: "Minimum trust score to auto-push (0-100)"
+        required: false
+        default: "70"
+  # PR auto-merge trigger (for sovereign-evolution labeled PRs)
   pull_request:
     types: [labeled, opened, synchronize, reopened]
 
 jobs:
+  # ── Job 1: Full Sovereign Loop (scheduled / manual) ─────────────────────────
+  sovereign-evolve:
+    name: 🧬 Sovereign Evolution Cycle
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        run: |
+          pip install pyyaml 2>/dev/null || true
+          pip install -r requirements.txt 2>/dev/null || true
+
+      - name: Configure git identity
+        run: |
+          git config user.name  "Secretary Bird 🦅"
+          git config user.email "agentica-bot@users.noreply.github.com"
+
+      - name: Step 1 — Competitor Intel Scan
+        run: python scripts/sovereign_intel.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true   # cached intel used if scan fails
+
+      - name: Step 2 — Evolution Engine
+        run: python scripts/evolve.py
+        continue-on-error: false
+
+      - name: Step 3 — NL Swarm Manifest
+        run: |
+          TOP_GAP=$(python -c "
+          import json, pathlib
+          intel = json.loads(pathlib.Path('.Agentica/competitor_intel.json').read_text())
+          from collections import Counter
+          c = Counter(g for r in intel for g in r.get('trending_requests',[]))
+          print(c.most_common(1)[0][0] if c else 'general capability improvement')
+          " 2>/dev/null || echo "general capability improvement")
+          python scripts/nl_swarm.py "$TOP_GAP" --output .Agentica/swarm_sovereign.json
+
+      - name: Step 4 — Proof-of-Work Attestation
+        run: python scripts/pow_commit.py sign
+        continue-on-error: true
+
+      - name: Read trust score
+        id: trust
+        run: |
+          SCORE=$(python -c "
+          import json, pathlib
+          a = pathlib.Path('.Agentica/attestations/latest.json')
+          if a.exists():
+              print(json.loads(a.read_text()).get('trust_score','0/100'))
+          else:
+              print('0/100')
+          " 2>/dev/null || echo "0/100")
+          echo "score=$SCORE" >> $GITHUB_OUTPUT
+          echo "Trust Score: $SCORE"
+          NUMERIC=$(echo "$SCORE" | cut -d'/' -f1)
+          echo "numeric=$NUMERIC" >> $GITHUB_OUTPUT
+
+      - name: Check minimum trust score
+        run: |
+          MIN=${{ github.event.inputs.min_trust || '70' }}
+          SCORE=${{ steps.trust.outputs.numeric }}
+          echo "Trust score: $SCORE / Minimum: $MIN"
+          if [ "$SCORE" -lt "$MIN" ]; then
+            echo "::warning::Trust score $SCORE is below minimum $MIN. Push skipped."
+            echo "SKIP_PUSH=true" >> $GITHUB_ENV
+          else
+            echo "SKIP_PUSH=false" >> $GITHUB_ENV
+          fi
+
+      - name: Push changes to GitHub
+        if: env.SKIP_PUSH == 'false' && github.event.inputs.dry_run != 'true'
+        run: git push origin main || echo "Nothing to push."
+
+      - name: Summary
+        run: |
+          echo "### 🦅 Sovereign Evolution Cycle Complete" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trust Score:** ${{ steps.trust.outputs.score }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Pushed:** $([ '${{ env.SKIP_PUSH }}' = 'false' ] && echo Yes || echo No)" >> $GITHUB_STEP_SUMMARY
+
+  # ── Job 2: Auto-merge sovereign-evolution PRs ────────────────────────────────
   auto-merge:
-    runs-on: windows-latest
-    if: contains(github.event.pull_request.labels.*.name, 'sovereign-evolution')
+    name: 🔀 Auto-Merge Sovereign PR
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'pull_request' &&
+      contains(github.event.pull_request.labels.*.name, 'sovereign-evolution')
+    permissions:
+      pull-requests: write
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Verify Evolution Trust Score
-        run: |
-          # In Phase P25, this script verifies that the PR was generated
-          # by the NL Swarm and approved by Guardian with a high trust score.
-          # For now, we simulate a pass if the label is present.
-          echo "Verifying Sovereign Evolution trust score..."
-          python -c "print('Trust Score: 95/100 (CERTIFIED)')"
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-      - name: Auto-Merge Certified Stomp
+      - name: Verify trust score from attestation
+        id: verify
+        run: |
+          python -c "
+          import json, sys
+          from pathlib import Path
+          a = Path('.Agentica/attestations/latest.json')
+          if not a.exists():
+              print('No attestation found.')
+              sys.exit(1)
+          data = json.loads(a.read_text())
+          score = data.get('trust_score', '0/100')
+          numeric = int(score.split('/')[0])
+          print(f'Trust Score: {score}')
+          if numeric < 90:
+              print(f'Score {numeric} < 90 — auto-merge BLOCKED.')
+              sys.exit(1)
+          print('Score >= 90 — CERTIFIED for auto-merge.')
+          "
+
+      - name: Auto-merge certified PR
+        if: success()
         uses: pascalgn/automerge-action@v0.16.4
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MERGE_LABELS: "sovereign-evolution"
           MERGE_METHOD: "rebase"
-          MERGE_COMMIT_MESSAGE: "🦅 Autonomous stomp approved by Secretary Bird (Trust Score: 95)"
+          MERGE_COMMIT_MESSAGE: >
+            🦅 Autonomous stomp approved by Secretary Bird
+            (Trust Score: ${{ steps.verify.outputs.score }})

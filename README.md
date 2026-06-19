@@ -153,7 +153,7 @@ Then in Copilot Chat:
 
 ---
 
-## 📦 Phases P1 → P19
+## 📦 Phases P1 → P25
 
 | Phase | Feature | Script |
 |-------|---------|--------|
@@ -171,11 +171,17 @@ Then in Copilot Chat:
 | P12 | Logic Simulacrum | `simulacrum.py` |
 | P13 | Performance Pulse | `performance_pulse.py` |
 | P14 | Agentica CLI v2 | `agentica_cli.py` |
-| **P15** | **Real LLM Simulacrum** 🦅 | `real_simulacrum.py` |
-| **P16** | **Guardian Mode** 🦅 | `guardian_mode.py` |
-| **P17** | **NL Swarm** 🦅 | `nl_swarm.py` |
-| **P18** | **ADR Generator** 🦅 | `adr_generator.py` |
-| **P19** | **Proof-of-Work Commits** 🦅 | `pow_commit.py` |
+| **P15** | **Real LLM Simulacrum** 🦥 | `real_simulacrum.py` |
+| **P16** | **Guardian Mode** 🦥 | `guardian_mode.py` |
+| **P17** | **NL Swarm** 🦥 | `nl_swarm.py` |
+| **P18** | **ADR Generator** 🦥 | `adr_generator.py` |
+| **P19** | **Proof-of-Work Commits** 🦥 | `pow_commit.py` |
+| **P20** | **Multi-Model Simulacrum** 🦥 | `multi_model_simulacrum.py` |
+| **P21** | **Swarm Result Merger** 🦥 | `swarm_merger.py` |
+| **P22** | **Sovereign Dashboard** 🦥 | `dashboard_api.py` |
+| **P23** | **VS Code Sidebar Extension** 🦥 | `vscode-extension/` |
+| **P24** | **Guardian Rule DSL** 🦥 | `guardian_rules_engine.py` |
+| **P25** | **Sovereign Loop** 🦥 | `sovereign_loop.py` |
 
 ---
 
@@ -216,7 +222,7 @@ Then in Copilot Chat:
 | **Architecture Decision Records** | ✅ Auto-generated | ❌ | ❌ | ❌ |
 | **NL → Swarm manifest** | ✅ Unique | ❌ | ❌ | ❌ |
 | **Shadow Sandbox execution** | ✅ | ❌ | ❌ | ❌ |
-| **Parallel agents (Swarm)** | ✅ 20 agents | ❌ | ❌ Single | ❌ Single |
+| **Parallel agents (Swarm)** | ✅ 20 agents | ❌ | ❌ | ❌ Single |
 | **Persistent memory** | ✅ ReasoningBank | ❌ | ❌ | ❌ |
 | **Cross-project memory** | ✅ Soul Bridge | ❌ | ❌ | ❌ |
 | **Multi-channel messaging** | ❌ | ✅ Best | ❌ | ❌ |
@@ -265,7 +271,7 @@ graph TD
 ## 🛠️ CLI Reference
 
 ```bash
-# ── Core Swarm ──────────────────────────────────────────
+# ── Core Swarm ─────────────────────────────────────────────────────
 python scripts/agentica_cli.py swarm manifest.json         # dispatch swarm
 python scripts/agentica_cli.py swarm manifest.json --shadow # sandboxed
 python scripts/nl_swarm.py "Add auth and write tests" --run # NL → swarm
@@ -275,12 +281,25 @@ python scripts/agentica_cli.py simulacrum "Use REST or GraphQL?"
 python scripts/real_simulacrum.py --set-key YOUR_GEMINI_KEY  # enable live LLM
 python scripts/real_simulacrum.py "Your topic" --rounds 3
 
-# ── Guardian Mode ────────────────────────────────────────
-python scripts/guardian_mode.py install   # activate pre-commit hook
-python scripts/guardian_mode.py audit     # view last 5 audits
-python scripts/guardian_mode.py remove    # deactivate
+# ── Guardian Mode (P16 + P24) ─────────────────────────────
+python scripts/guardian_mode.py install          # activate pre-commit hook
+python scripts/guardian_mode.py audit            # view last 5 audits
+python scripts/guardian_rules_engine.py init     # create custom YAML rules [P24]
+python scripts/guardian_rules_engine.py list     # show active rules
+python scripts/guardian_rules_engine.py validate # test rules against staged files
 
-# ── Architecture Decision Records ───────────────────────
+# ── Sovereign Loop (P25) ──────────────────────────────────
+python scripts/sovereign_intel.py                # scan competitors (real GitHub API)
+python scripts/sovereign_loop.py                 # full 5-step evolution cycle
+python scripts/sovereign_loop.py --dry-run       # preview without writing files
+python scripts/sovereign_loop.py --no-push       # evolve + commit but don't push
+python scripts/sovereign_loop.py --status        # show last evolution cycle
+
+# ── VS Code Extension (P23) ───────────────────────────────
+cd vscode-extension && npm install && npm run compile
+# Then press F5 in VS Code to open the Extension Development Host
+
+# ── Architecture Decision Records ─────────────────────────
 python scripts/adr_generator.py --latest  # ADR from last debate
 python scripts/adr_generator.py --list    # list all sessions
 python scripts/adr_generator.py --all     # generate all ADRs
