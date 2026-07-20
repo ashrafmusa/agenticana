@@ -77,6 +77,9 @@ This is the living roadmap for Agenticana. Items marked **open** are available f
 
 | P26 | Voice-to-Code Bridge | ✅ Auto-Evolved 2026-07-13 |
 
+
+| P26 | Voice-to-Code Bridge | ✅ Auto-Evolved 2026-07-20 |
+
 ## 🔜 Next Phases (Open for Contributors)
 
 ### P26: Voice-to-Code Bridge (Real)

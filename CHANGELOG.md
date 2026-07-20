@@ -6,6 +6,21 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [P26] 2026-07-20 — Voice-to-Code Bridge
+
+### Added
+- **Voice-to-Code Bridge**: Allow users to describe code changes in spoken/written natural language. The system transcribes and pipes input directly to NL Swarm for agent dispatch.
+- Plan document: `plans/p26_voice_to_code.md`
+- Triggered by market gap analysis: *"Linux/Windows Clawdbot Apps"*
+
+### Evolution Chain
+- Intel swarm identified gap across 11 competitor repos
+- Evolution engine selected P26 as next logical phase
+- All artifacts auto-committed by Secretary Bird 🦅
+
+---
+
+
 ## [P26] 2026-07-13 — Voice-to-Code Bridge
 
 ### Added
