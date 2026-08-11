@@ -1,0 +1,8 @@
+{
+  "version": "2.0",
+  "description": "Project-level ReasoningBank for agenticana — stores agent decisions for pattern reuse",
+  "last_consolidated": null,
+  "total_decisions": 0,
+  "decisions": [],
+  "patterns": []
+}
